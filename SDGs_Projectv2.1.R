@@ -1,0 +1,307 @@
+
+### https://unstats.un.org/SDGAPI/v1/sdg/Goal/DataCSV
+### downloading the dataset from year 2000 - present
+sdgRaw <- read.csv("https://unstats.un.org/SDGAPI//staging/20200127152310260_x16117492@student.ncirl.ie_data.csv", 
+                   stringsAsFactors = FALSE, 
+                   sep = ',')
+
+write.csv(sdgRaw, file = "sdgRaw.csv")
+
+library(readr)
+
+### the file sdgRaw was modified in excel
+setwd("/home/marlon/R_projects")
+sdg1_10 <- read.csv(file = "sdg1_10.csv", stringsAsFactors = FALSE, na = '0', sep = ',' )
+sdg11_17 <- read.csv(file = "sdg11_17.csv",stringsAsFactors = FALSE, na = '0', sep = ',' )
+
+sdgs <- rbind(sdg1_10, sdg11_17)
+sdgs <- as.data.frame(sdgs [, c(-1,-2)])
+sdgs <- as.data.frame(sdgs [, c(1,2,5,7,8,9,17,18,32)])
+
+# rename columns 
+names(sdgs)[1] <- "Goal"
+names(sdgs)[3] <- "Indicator"
+names(sdgs)[4] <- "GeoArea"
+names(sdgs)[5] <- "Period"
+names(sdgs)[6] <- "Value"
+names(sdgs)[8] <- "Age"
+names(sdgs)[9] <- "Sex"
+
+#cleaning the dataset
+sdgs$Value<- str_replace_all(sdgs$Value, "<","")
+sdgs$Value<- str_replace_all(sdgs$Value, ">","")
+sdgs$Value[sdgs$Value == "0" ] <- NA
+sdgs$Value[sdgs$Value == "N" ] <- NA
+sdgs$Value[sdgs$Value == "NV" ] <- NA
+sdgs$Age[sdgs$Age == "" ] <- NA
+sdgs$Sex[sdgs$Sex == "" ] <- NA
+summary(sdgs)
+
+write_csv(sdgs,"sdgs.csv")
+
+sdgs <- read_csv("sdgs.csv",col_names = TRUE, col_types = 
+                   cols(
+                     Goal = col_double(),
+                     Target = col_character(),
+                     Indicator = col_character(),
+                     GeoArea = col_character(),
+                     Period = col_double(),
+                     Value = col_double(),
+                     Units = col_character(),
+                     Age = col_character(),
+                     Sex = col_character()
+                   ))
+str(sdgs)
+summary(sdgs)
+round(sdgs$Value, digits=3)
+save(sdgs, file="sdgs.RData")
+write_csv(sdgs,"sdgs.csv")
+
+##
+###Bulding the Map
+
+library(magrittr)
+library(rvest)
+library(reshape2)
+
+url <- "https://www.nationsonline.org/oneworld/country_code_list.htm"
+iso_codes <- url %>%
+  read_html() %>%
+  html_nodes(xpath = '//*[@id="CountryCode"]') %>%
+  html_table()
+iso_codes <- iso_codes[[1]][, -1]
+iso_codes <- iso_codes[!apply(iso_codes, 1, function(x){all(x == x[1])}), ]
+names(iso_codes) <- c("Country", "ISO2", "ISO3", "UN")
+head(iso_codes)
+
+load("sdgs.RData")
+head(sdgs)
+
+sdgsMap <- sdgs
+sdgsMap['UN'] <- iso_codes$UN[match(sdgsMap$GeoArea, iso_codes$Country)]
+
+# To map our data, we need to merge the sdgs and world map data, it is needed to chance some old names.
+
+old_names <- c("Bolivia (Plurinational State of)", "Cabo Verde", "China, Hong Kong Special Administrative Region",
+               "China, Macao Special Administrative Region", "Congo", "Democratic People's Republic of Korea",
+               "Democratic Republic of the Congo", "Iran (Islamic Republic of)", "Lao People's Democratic Republic",
+               "Micronesia (Federated States of)", "Republic of Korea", "Republic of Moldova", "Saint Vincent and the Grenadines",
+               "State of Palestine", "Syrian Arab Republic", "The former Yugoslav Republic of Macedonia",
+               "United Kingdom of Great Britain and Northern Ireland", "United Republic of Tanzania",
+               "United States Virgin Islands", "Venezuela (Bolivarian Republic of)")
+new_names <- c("Bolivia", "Cape Verde", "Hong Kong, SAR China", "Macao, SAR China", "Congo (Brazzaville)",
+               "Korea (North)", "Congo, (Kinshasa)", "Iran, Islamic Republic of", "Lao PDR", "Micronesia, Federated States of",
+               "Korea (South)", "Moldova", "Saint Vincent and Grenadines", "Palestinian Territory", "Syrian Arab Republic (Syria)",
+               "Macedonia, Republic of", "United Kingdom", "Tanzania, United Republic of", "Virgin Islands, US", "Venezuela (Bolivarian Republic)")
+
+for (i in 1:length(old_names)){
+  sdgsMap$GeoArea[sdgsMap$GeoArea == old_names[i]] <- new_names[i]
+}
+
+
+
+sdgsMap <- sdgsMap[, c(-2)]
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "1","Goal 1")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "2","Goal 2")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "3","Goal 3")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "4","Goal 4")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "5","Goal 5")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "6","Goal 6")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "7","Goal 7")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "8","Goal 8")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "9","Goal 9")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "10","Goal 10")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "11","Goal 11")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "12","Goal 12")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "13","Goal 13")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "14","Goal 14")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "15","Goal 15")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "16","Goal 16")
+sdgsMap$Goal<- str_replace_all(sdgsMap$Goal, "17","Goal 17")
+
+sdgsMap <- as.data.frame(sdgsMap)
+sdgsMap[] <- lapply(sdgsMap, as.character)
+sdgsMap$Value <- as.numeric(sdgsMap$Value)
+#sdgsMap$Period <- as.numeric(sdgsMap$Period)
+
+# load world map
+library(maps)
+library(ggplot2)
+world_data <- ggplot2::map_data('world')
+world_data <- fortify(world_data)
+head(world_data)
+
+world_data["UN"] <- iso_codes$UN[match(world_data$region, iso_codes$Country)]
+world_data["ISO3"] <- iso_codes$ISO3[match(world_data$region, iso_codes$Country)]
+
+old_names <- c("French Southern and Antarctic Lands", "Antigua", "Barbuda", "Saint Barthelemy", "Brunei", "Ivory Coast",
+               "Democratic Republic of the Congo", "Republic of Congo", "Falkland Islands", "Micronesia", "UK", 
+               "Heard Island", "Cocos Islands", "Iran", "Nevis", "Saint Kitts", "South Korea", "Laos", "Saint Martin",
+               "Macedonia", "Pitcairn Islands", "North Korea", "Palestine", "Russia", "South Sandwich Islands",
+               "South Georgia", "Syria", "Trinidad", "Tobago", "Taiwan", "Tanzania", "USA", "Vatican", "Grenadines",
+               "Saint Vincent", "Venezuela", "Vietnam", "Wallis and Fortuna")
+new_names <- c("French Southern Territories", rep("Antigua and Barbuda", 2), "Saint-Barthélemy",
+               "Brunei Darussalam", "Côte d'Ivoire", "Congo, (Kinshasa)", "Congo (Brazzaville)", 
+               "Falkland Islands (Malvinas)", "Micronesia, Federated States of", "United Kingdom",
+               "Heard and Mcdonald Islands", "Cocos (Keeling) Islands", "Iran, Islamic Republic of",
+               rep("Saint Kitts and Nevis", 2), "Korea (South)", "Lao PDR", "Saint-Martin (French part)",
+               "Macedonia, Republic of", "Pitcairn", "Korea (North)", "Palestinian Territory", "Russian Federation",
+               rep("South Georgia and the South Sandwich Islands", 2), 
+               "Syrian Arab Republic (Syria)", rep("Trinidad and Tobago", 2), "Taiwan, Republic of China",
+               "Tanzania, United Republic of", "United States of America", "Holy See (Vatican City State)",
+               rep("Saint Vincent and Grenadines", 2), "Venezuela (Bolivarian Republic)", "Viet Nam", "Wallis and Futuna Islands")
+
+for (i in 1:length(old_names)){
+  world_data$region[world_data$region == old_names[i]] <- new_names[i]
+}
+
+
+###
+#### Building the map function
+worldMaps <- function(sdgsMap, world_data, goal, period, indicator){
+  
+  # Function for setting the aesthetics of the plot
+  my_theme <- function () { 
+    theme_bw() + theme(axis.title = element_blank(),
+                       axis.text = element_blank(),
+                       axis.ticks = element_blank(),
+                       panel.grid.major = element_blank(), 
+                       panel.grid.minor = element_blank(),
+                       panel.background = element_blank(), 
+                       legend.position = "bottom",
+                       panel.border = element_blank(), 
+                       strip.background = element_rect(fill = 'white', colour = 'white'))
+  }
+  
+  # Select only the data that the user has selected to view
+  plotsdgsMap <- sdgsMap[sdgsMap$Goal== goal & sdgsMap$Indicator == indicator & sdgsMap$Period == period,]
+  plotsdgsMap <- plotsdgsMap[!is.na(plotsdgsMap$UN), ]
+  
+  # Add the data the user wants to see to the geographical world data
+  world_data['Goal'] <- rep(goal, nrow(world_data))
+  world_data['Period'] <- rep(period, nrow(world_data))
+  world_data['Indicator'] <- rep(indicator, nrow(world_data))
+  world_data['Value'] <- plotsdgsMap$Value[match(world_data$UN, plotsdgsMap$UN)]
+  
+  
+  # Create caption with the data source to show underneath the map
+  capt <- paste0("Source: ", ifelse(indicator == "SDGs", "United Nations" , "World Bank"))
+  
+  # Specify the plot for the world map
+  library(RColorBrewer)
+  library(ggiraph)
+  g <- ggplot() + 
+    geom_polygon_interactive(data = subset(world_data, lat >= -60 & lat <= 90), color = 'gray70', size = 0.1,
+                             aes(x = long, y = lat, fill = Value, group = group, 
+                                 tooltip = sprintf("%s<br/>%s", ISO3, Value))) + 
+    scale_fill_gradientn(colours = brewer.pal(5, "RdBu"), na.value = 'white') + 
+    labs(fill = goal, color = goal, title = NULL, x = NULL, y = NULL, caption = capt) + 
+    my_theme()
+  
+  return(g)
+}
+
+library(shiny)
+library(ggiraph)
+library(shinydashboard)
+
+# Define the UI
+
+ui = dashboardPage(
+  
+  # App title
+  header <-  dashboardHeader(title = "SDGs"),
+  
+  # Sidebar layout with input and output definitions
+  sidebar <- dashboardSidebar(
+    sidebarMenu(
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
+      menuItem("View Dataset", tabName = "dataTable", icon = icon("table"))
+    )
+  ),
+  # Sidebar panel for inputs 
+  body <-  dashboardBody(
+    
+    fluidRow(
+      
+      box(
+        title = "Sustainable",
+        # First input: Type of data
+        selectInput(inputId = "goal",
+                    label = "Choose the type of data you want to see:",
+                    choices = unique(sdgsMap$Goal)
+        ),
+        
+        # Second input (choices depend on the choice for the first input)
+        
+        uiOutput("secondSelection"),
+        
+        uiOutput("thirdSelection")
+        
+      ),
+      tabItems(
+        # First tab content
+        tabItem(tabName = "dashboard",
+                
+                
+                # Main panel for displaying outputs
+                fluidRow(
+                  # Output: interactive world map
+                  box(
+                    title = "World Map", width = 4,
+                    girafeOutput("distPlot")
+                  ),
+                )
+        ),
+        
+        tabItem(tabName = "dataTable",
+                fluidRow(
+                  box(title = "Dataset Table",
+                      tableOutput("tablePlot") 
+                  )
+                  
+                )
+        )
+      )
+    )
+  )
+)
+dashboardPage(header,
+              sidebar,
+              body
+)
+
+# Define the server
+server = function(input, output) {
+  
+  
+  # Create the interactive world map
+  output$distPlot <- renderGirafe({
+    ggiraph(code = print(worldMaps(sdgsMap, world_data, input$goal, input$period, input$indicator)))
+    
+  })
+  
+  output$tablePlot <- renderTable({
+    sdgtb <- subset(sdgsMap, sdgsMap$Goal == input$goal & sdgsMap$Indicator == input$indicator 
+                    & sdgsMap$Period == input$period)
+  })
+  
+  
+  # Change the choices for the second selection on the basis of the input to the first selection
+  output$secondSelection <- renderUI({
+    choice_second <- as.list(unique(sdgsMap$Indicator[which(sdgsMap$Goal == input$goal)]))
+    selectInput(inputId = "indicator", choices = choice_second,
+                label = "Choose the indicator for which you want to see the data:")
+  })
+  
+  # Change the choices for the third selection on the basis of the input to the first and second selections
+  output$thirdSelection <- renderUI({
+    choice_third <- as.list(unique(sdgsMap$Period[sdgsMap$Goal == input$goal & sdgsMap$Indicator == input$indicator]))
+    selectInput(inputId = "period", choices = choice_third,
+                label = paste0("Choose the type of  you want to explore:"))
+  })
+}
+
+
+
+shinyApp(ui = ui, server = server)
