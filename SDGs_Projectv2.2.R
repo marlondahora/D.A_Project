@@ -211,6 +211,7 @@ sdgsIndex <- read_csv("2019GlobalIndexResults.csv",col_names = TRUE, col_types =
 
 library(shiny)
 library(ggiraph)
+library(tidyverse)
 library(shinydashboard)
 library(shinydashboardPlus)
 
@@ -243,6 +244,119 @@ ui = dashboardPage(
                                      choices = unique(sdgsIndex$Country)
                          )
                          
+                       ),
+                       box(title = "SDGs",width = NULL,status = "primary",
+                           tags$button(
+                             id = "goal_1",
+                             class = "btn action-button",
+                             tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-01.png",
+                                      height = "40px")
+                           ),
+                           tags$button(
+                             id = "goal_2",
+                             class = "btn action-button",
+                             tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-02.png",
+                                      height = "40px")
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_3",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_4",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_5",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_6",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_7",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_8",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_9",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_9",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_10",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_11",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-11.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_12",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_13",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_14",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_15",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_16",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
+                                                height = "40px",)
+                           ),
+                           tags$button(style="border-radio: 10px",
+                                       id = "goal_17",
+                                       class = "btn action-button",
+                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
+                                                height = "40px",)
+                           )
+                           
+                           
+                           
                        ),
                        box(title = "Country",width = NULL,status = "primary",
                            userOutput("countryProfile")
