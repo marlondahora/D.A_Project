@@ -219,7 +219,19 @@ my_theme <- function () {
                      legend.position = "bottom",
                      panel.border = element_blank(), 
                      strip.background = element_rect(fill = 'white', colour = 'white'))
+  
+  
 }
+
+
+sdgsIndex1<- sdgsIndex
+names(sdgsIndex1)[1] <- "region"
+world_map <- map_data("world")
+sdgsIndexchoro <- merge(world_map, sdgsIndex1,  sort = FALSE, by = "region")
+sdgsIndexchoro <- sdgsIndexchoro[order(sdgsIndexchoro$order), ]
+str(sdgsIndexchoro)
+
+
 library(shiny)
 library(ggiraph)
 library(tidyverse)
@@ -381,7 +393,7 @@ ui = dashboardPage(
                 ),
                 column(width = 7,
                        box(title = "Country",width = NULL,status = "primary",
-                           plotOutput("countryPlot")
+                           girafeOutput("countryPlot")
                        )
                 )
               )
@@ -478,15 +490,17 @@ server = function(input, output) {
     girafe(ggobj = m, width = 15,height=9)
   })
   
-  output$countryPlot <- renderPlot({
-    contryMap <- map_data("world", region = input$country)
-    main = input$country
-    ggplot() + geom_polygon(data = contryMap, aes(x=long, y = lat, group = group),size = .1, color = "red") + 
-      coord_fixed(1.3)+
-      scale_fill_viridis_d()+
-      theme_void()+
-      theme(legend.position = "none")+
+  output$countryPlot <- renderGirafe({
+    
+    countryMap <- map_data("world", region = input$country)
+    countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+    c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Global_Score,
+                                                                   tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Global_Score)))+
+      scale_fill_gradientn(colours = "skyblue2", na.value = 'white') + 
+      
+      my_theme()+
       ggtitle(input$country)
+    girafe(ggobj = c)
   })
   # Create the interactive world map
   output$distPlot <- renderGirafe({
