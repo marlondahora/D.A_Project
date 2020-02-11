@@ -209,6 +209,17 @@ sdgsIndex <- read_csv("2019GlobalIndexResults.csv",col_names = TRUE, col_types =
                         ))
 
 
+my_theme <- function () { 
+  theme_bw() + theme(axis.title = element_blank(),
+                     axis.text = element_blank(),
+                     axis.ticks = element_blank(),
+                     panel.grid.major = element_blank(), 
+                     panel.grid.minor = element_blank(),
+                     panel.background = element_blank(), 
+                     legend.position = "bottom",
+                     panel.border = element_blank(), 
+                     strip.background = element_rect(fill = 'white', colour = 'white'))
+}
 library(shiny)
 library(ggiraph)
 library(tidyverse)
@@ -225,6 +236,7 @@ ui = dashboardPage(
   # Sidebar layout with input and output definitions
   sidebar <- dashboardSidebar(
     sidebarMenu(
+      menuItem("Global Rank", tabName = "global_index", icon = icon("dashboard")),
       menuItem("SDGs Countries", tabName = "countries", icon = icon("dashboard")),
       menuItem("SDGs Incators", tabName = "indicators", icon = icon("dashboard")),
       menuItem("Analytcs", tabName = "analytics", icon = icon("table"))
@@ -234,6 +246,9 @@ ui = dashboardPage(
   body <-  dashboardBody(
     
     tabItems(
+      tabItem(tabName = "global_index",
+              girafeOutput("indexPlot",width = "100%", height = "400px"),
+      ),
       tabItem(tabName = "countries",
               fluidRow(
                 column(width = 5,
@@ -358,6 +373,7 @@ ui = dashboardPage(
                            
                            
                        ),
+                       
                        box(title = "Country",width = NULL,status = "primary",
                            userOutput("countryProfile")
                        )
@@ -451,8 +467,18 @@ server = function(input, output) {
   })
   
   #country maps
+  output$indexPlot <- renderGirafe({
+    m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+      geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                   tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Global_Score)),color = "white")+
+      scale_fill_gradientn(colours = brewer.pal(5, "RdBu"), na.value = 'white') + 
+      scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+      scale_x_continuous(breaks = c()) +
+      my_theme()
+    girafe(ggobj = m, width = 15,height=9)
+  })
+  
   output$countryPlot <- renderPlot({
-    
     contryMap <- map_data("world", region = input$country)
     main = input$country
     ggplot() + geom_polygon(data = contryMap, aes(x=long, y = lat, group = group),size = .1, color = "red") + 
@@ -504,3 +530,4 @@ server = function(input, output) {
 
 
 shinyApp(ui = ui, server = server)
+
