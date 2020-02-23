@@ -39,6 +39,11 @@ summary(sdgs)
 
 write_csv(sdgs,"sdgs.csv")
 
+###################
+########################
+##############################
+
+
 sdgs <- read_csv("sdgs.csv",col_names = TRUE, col_types = 
                    cols(
                      Goal = col_double(),
@@ -65,6 +70,7 @@ library(rvest)
 library(reshape2)
 library(tidyverse)
 
+
 url <- "https://www.nationsonline.org/oneworld/country_code_list.htm"
 iso_codes <- url %>%
   read_html() %>%
@@ -76,12 +82,15 @@ names(iso_codes) <- c("Country", "ISO2", "ISO3", "UN")
 head(iso_codes)
 
 #loading a checking the data
+setwd("~/D.A_Project")
+
+
 load("sdgs.RData")
 head(sdgs)
 summary(sdgs$Value)
 sdgsMap <- sdgs
 round(sdgsMap$Value, digits=3)
-
+sdgsMap<- filter(sdgsMap, Units %in% "PERCENT") 
 #aggregating data
 
 sdgsMap <-  sdgsMap %>%
@@ -126,6 +135,7 @@ sdgsMap$Value <- as.numeric(sdgsMap$Value)
 # load world map
 library(maps)
 library(ggplot2)
+library(RColorBrewer)
 world_data <- ggplot2::map_data('world')
 world_data <- fortify(world_data)
 head(world_data)
@@ -258,9 +268,15 @@ ui = dashboardPage(
   body <-  dashboardBody(
     
     tabItems(
+      ######################################################## 1st tab ##########################################
       tabItem(tabName = "global_index",
+              valueBoxOutput("populationBox"),
+              
+              valueBoxOutput("povertyBox"),
+              
               girafeOutput("indexPlot",width = "100%", height = "400px"),
       ),
+      ######################################################## 2nd tab ##########################################
       tabItem(tabName = "countries",
               fluidRow(
                 column(width = 5,
@@ -398,7 +414,7 @@ ui = dashboardPage(
                 )
               )
       ),
-      
+      ######################################################## 3rd tab ##########################################
       tabItem(
         tabName = "indicators",
         
@@ -420,6 +436,7 @@ ui = dashboardPage(
         )
         
       ),
+      ######################################################## 4th tab ##########################################
       tabItem(tabName = "analytics",
               fluidRow(
                 box(
@@ -432,6 +449,10 @@ ui = dashboardPage(
                   uiOutput("t2secondSelection"),
                   uiOutput("t2thirdSelection")
                 ),
+                box(title = "Box Plot",
+                    plotOutput("bPlot"),plotOutput("hPlot"),
+                    verbatimTextOutput("Result") 
+                ),
                 box(title = "Dataset Table",
                     tableOutput("tablePlot")
                 )
@@ -443,9 +464,51 @@ ui = dashboardPage(
 )
 
 dashboardPage(header,sidebar,body)
-
+######################################################## Server Functions ##########################################
 # Define the server
 server = function(input, output) {
+  subsetInputs <- reactive({
+    subset(sdgsMap, sdgsMap$Goal == input$t2goal & sdgsMap$Indicator == input$t2indicator 
+           & sdgsMap$GeoArea == input$t2geoarea)
+    
+  })
+  ######################################################## 1st tab server side ##########################################
+  #value boxes
+  output$populationBox <- renderValueBox({
+    pop<-sum(sdgsIndex$Population_in_2019)
+    pop<-prettyNum(pop,big.mark=",",scientific=FALSE)
+    valueBox(
+      pop, "Population in 2019", icon = icon("users"),
+      color = "purple"
+    )
+  })
+  
+  output$povertyBox <- renderValueBox({
+    pov <- filter(sdgsMap, Indicator %in% "Employed population below international poverty line, by sex and age (%)" &
+                    GeoArea %in%  "World" & Period %in% "2018")
+    pov <- pov$Value
+    valueBox(
+      value = paste0(pov,"%"), 
+      subtitle = "Population in Poverty", 
+      #subtitle = tags$p("Population in Poverty",style = "font-size: 150%;"), 
+      icon = icon("thumbs-up", lib = "glyphicon"),
+      color = "red"
+    )
+  })
+  
+  #country maps
+  output$indexPlot <- renderGirafe({
+    m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+      geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                   tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Global_Score)),color = "white")+
+      scale_fill_gradientn(colours = brewer.pal(5, "RdBu"), na.value = 'white') + 
+      scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+      scale_x_continuous(breaks = c()) +
+      my_theme()
+    girafe(ggobj = m, width = 15,height=9)
+  })
+  
+  ######################################################## 2nd tab server side ##########################################
   #country profile
   output$countryProfile <- renderUser({
     lower <- tolower(input$country)
@@ -477,19 +540,7 @@ server = function(input, output) {
       )
     )
   })
-  
-  #country maps
-  output$indexPlot <- renderGirafe({
-    m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
-      geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
-                                   tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Global_Score)),color = "white")+
-      scale_fill_gradientn(colours = brewer.pal(5, "RdBu"), na.value = 'white') + 
-      scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
-      scale_x_continuous(breaks = c()) +
-      my_theme()
-    girafe(ggobj = m, width = 15,height=9)
-  })
-  
+  #country plot
   output$countryPlot <- renderGirafe({
     
     countryMap <- map_data("world", region = input$country)
@@ -502,17 +553,14 @@ server = function(input, output) {
       ggtitle(input$country)
     girafe(ggobj = c)
   })
-  # Create the interactive world map
+  
+  
+  ######################################################## 3rd tab server side ##########################################
+  # Indicators world map
   output$distPlot <- renderGirafe({
     ggiraph(code = print(worldMaps(sdgsMap, world_data, input$goal, input$period, input$indicator)))
     
   })
-  #table plot
-  output$tablePlot <- renderTable({
-    sdgtb <- subset(sdgsMap, sdgsMap$Goal == input$t2goal & sdgsMap$Indicator == input$t2indicator 
-                    & sdgsMap$GeoArea == input$t2geoarea)
-  })
-  
   
   # Change the choices for the second selection on the basis of the input to the first selection
   output$secondSelection <- renderUI({
@@ -521,18 +569,51 @@ server = function(input, output) {
                 label = "Choose the indicator for which you want to see the data:")
   })
   
+  # Change the choices for the third selection on the basis of the input to the first and second selections
+  output$thirdSelection <- renderUI({
+    choice_third <- as.list(unique(sdgsMap$Period[sdgsMap$Goal == input$goal & sdgsMap$Indicator == input$indicator]))
+    selectInput(inputId = "period", choices = choice_third,
+                label = paste0("Choose the type of  you want to explore:"))
+  })    
+  
+  ######################################################## 4th tab server side ##########################################
+  #table plot
+  output$tablePlot <- renderTable({
+    subsetInputs()
+  })
+  
+  #box Plot
+  output$bPlot <- renderPlot({
+    bx <- subsetInputs()
+    bx$GeoArea <- as.factor(bx$GeoArea)
+    ggplot(bx, aes(x=GeoArea, y=Value)) + 
+      geom_boxplot()
+    #hist(bx$Value)
+    #boxplot(bx$Value)
+    
+    
+  })
+  
+  #hist plot
+  output$hPlot <- renderPlot({
+    bx <- subsetInputs()
+    hist(bx$Value)
+    
+  })
+  
+  #Shapiro-Wilk normality test
+  output$Result <- renderPrint({
+    bx <- subsetInputs()
+    shapiro.test(bx$Value)
+  })
+  
   # Change the choices for the second selection on the basis of the input to the first selection
   output$t2secondSelection <- renderUI({
     t2choice_second <- as.list(unique(sdgsMap$Indicator[which(sdgsMap$Goal == input$t2goal)]))
     selectInput(inputId = "t2indicator", choices = t2choice_second,
                 label = "Choose the indicator for which you want to see the data:")
   })
-  # Change the choices for the third selection on the basis of the input to the first and second selections
-  output$thirdSelection <- renderUI({
-    choice_third <- as.list(unique(sdgsMap$Period[sdgsMap$Goal == input$goal & sdgsMap$Indicator == input$indicator]))
-    selectInput(inputId = "period", choices = choice_third,
-                label = paste0("Choose the type of  you want to explore:"))
-  })
+  
   # Change the choices for the third selection on the basis of the input to the first and second selections
   output$t2thirdSelection <- renderUI({
     t2choice_third <- as.list(unique(sdgsMap$GeoArea[sdgsMap$Goal == input$t2goal & sdgsMap$Indicator == input$t2indicator]))
@@ -541,7 +622,4 @@ server = function(input, output) {
   })
 }
 
-
-
 shinyApp(ui = ui, server = server)
-
