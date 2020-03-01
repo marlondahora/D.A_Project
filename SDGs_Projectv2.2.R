@@ -233,6 +233,20 @@ my_theme <- function () {
   
 }
 
+my_polar_theme <- function(){
+  theme(
+    legend.position = "none",
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(),
+    panel.grid.major = element_line_interactive(size = 0.1, linetype = 'solid',
+                                                colour = "grey"), 
+    panel.background = element_rect(fill = 'transparent', colour = 'transparent'),
+    strip.background = element_rect(fill = 'transparent', colour = 'transparent'))
+  
+}
 
 sdgsIndex1<- sdgsIndex
 names(sdgsIndex1)[1] <- "region"
@@ -273,8 +287,95 @@ ui = dashboardPage(
               valueBoxOutput("populationBox"),
               
               valueBoxOutput("povertyBox"),
-              
+              #################### buttons##############
+              tags$button(
+                id = "wgoal_1",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-01.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_2",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-02.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_3",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_4",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_5",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_6",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_7",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_8",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_9",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_10",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_11",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-11.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_12",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_13",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_14",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_15",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_16",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
+                         height = "40px")),
+              tags$button(
+                id = "wgoal_17",
+                class = "btn action-button",
+                tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
+                         height = "40px")),
+              #################### outputs ##############
               girafeOutput("indexPlot",width = "100%", height = "400px"),
+              girafeOutput("indexPolarBar"),
       ),
       ######################################################## 2nd tab ##########################################
       tabItem(tabName = "countries",
@@ -286,8 +387,9 @@ ui = dashboardPage(
                                      label = "Please select a country:",
                                      choices = unique(sdgsIndex$Country)
                          )
-                         
-                       ),
+                       )
+                ),
+                column(width = 7,
                        box(title = "SDGs",width = NULL,status = "primary",
                            tags$button(
                              id = "goal_1",
@@ -335,12 +437,6 @@ ui = dashboardPage(
                                        id = "goal_8",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
-                                                height = "40px",)
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_9",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
                                                 height = "40px",)
                            ),
                            tags$button(style="border-radio: 10px",
@@ -398,16 +494,17 @@ ui = dashboardPage(
                                                 height = "40px",)
                            )
                            
-                           
-                           
-                       ),
-                       
+                       )
+                )
+              ),
+              fluidRow(
+                column(width = 5,
                        box(title = "Country",width = NULL,status = "primary",
                            userOutput("countryProfile")
                        )
-                       
                 ),
                 column(width = 7,
+                       
                        box(title = "Country",width = NULL,status = "primary",
                            girafeOutput("countryPlot")
                        )
@@ -507,7 +604,256 @@ server = function(input, output) {
       my_theme()
     girafe(ggobj = m, width = 15,height=9)
   })
+  #polar bar chart
+  output$indexPolarBar <- renderGirafe({
+    plotpolarIndex <- ggplot(polarIndex,
+                             aes(
+                               x = variable,
+                               y = value,
+                               fill = factor(variable),
+                               tooltip = sprintf("%s<br/>%s", polarIndex$variable, polarIndex$value)
+                             )) +
+      geom_col_interactive(width = 1, color = "white")+
+      coord_polar()+
+      my_polar_theme()
+    girafe(ggobj = plotpolarIndex)
+  })
   
+  ######################### actions buttons ############
+  observeEvent(input$wgoal_1,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_1)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(1, "Reds"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_2,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_2)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(4, "YlOrRd"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_3,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_3)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(5, "Greens"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_4,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_4)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(5, "Reds"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_5,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_5)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(5, "PuOr"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_6,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_6)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(5, "Blues"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_7,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_7)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(3, "YlOrRd"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_8,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_8)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(3, "RdBu"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_9,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_9)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(1, "PuOr"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_10,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_10)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(3, "PiYG"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_11,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_11)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(1, "Oranges"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_12,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_12)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(4, "YlOrBr"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_13,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_13)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(5, "Greens"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_14,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_14)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(5, "Blues"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_14,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_14)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(4, "Greens"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_15,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_15)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(4, "Greens"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_16,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_16)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(6, "Blues"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
+  observeEvent(input$wgoal_17,{
+    output$indexPlot <- renderGirafe({
+      m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
+        geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
+                                     tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_17)),color = "white")+
+        scale_fill_gradientn(colours = brewer.pal(7, "Blues"), na.value = 'white') + 
+        scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+        scale_x_continuous(breaks = c()) +
+        my_theme()
+      girafe(ggobj = m, width = 15,height=9)
+      
+    })
+  })
   ######################################################## 2nd tab server side ##########################################
   #country profile
   output$countryProfile <- renderUser({
@@ -516,7 +862,9 @@ server = function(input, output) {
     path <- "http://109.255.170.99:8787/files/D.A_Project/country_icons/"
     logo <- paste(path,lower,".svg",sep = "")
     pop<- sdgsIndex$Population_in_2019[ sdgsIndex$Country == input$country]
+    pop<- prettyNum(pop,big.mark=",",scientific=FALSE)
     ggp<- sdgsIndex$GDP_per_capita_in_2017[ sdgsIndex$Country == input$country]
+    ggp<- prettyNum(ggp,big.mark=",",scientific=FALSE)
     miss<- sdgsIndex$Percentage_missing_values[ sdgsIndex$Country == input$country]
     miss <- paste(miss,"%",sep = "")
     boxProfile(
@@ -554,6 +902,244 @@ server = function(input, output) {
     girafe(ggobj = c)
   })
   
+  observeEvent(input$goal_1,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_1,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_1)))+
+        scale_fill_gradientn(colours = "red", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_2,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_2,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_2)))+
+        scale_fill_gradientn(colours = "orange", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_3,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_3,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_3)))+
+        scale_fill_gradientn(colours = "green3", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_4,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_4,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_4)))+
+        scale_fill_gradientn(colours = "red3", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_5,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_5,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_5)))+
+        scale_fill_gradientn(colours = "red2", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_6,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_6,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_6)))+
+        scale_fill_gradientn(colours = "steelblue2", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_7,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_7,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_7)))+
+        scale_fill_gradientn(colours = "gold2", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+  })
+  observeEvent(input$goal_8,{
+    output$countryPlot <- renderGirafe({
+      countryMap <- map_data("world", region = input$country)
+      countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_8,
+                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_8)))+
+        scale_fill_gradientn(colours = "red4", na.value = 'white') + 
+        
+        my_theme()+
+        ggtitle(input$country)
+      girafe(ggobj = c)
+      
+    })
+    observeEvent(input$goal_9,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_9,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_9)))+
+          scale_fill_gradientn(colours = "orangered1", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_10,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_10,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_10)))+
+          scale_fill_gradientn(colours = "deeppink3", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_11,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_11,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_11)))+
+          scale_fill_gradientn(colours = "orange3", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_12,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_12,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_12)))+
+          scale_fill_gradientn(colours = "orange4", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_13,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_13,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_13)))+
+          scale_fill_gradientn(colours = "green4", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_14,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_14,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_14)))+
+          scale_fill_gradientn(colours = "dodgerblue1", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_15,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_15,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_15)))+
+          scale_fill_gradientn(colours = "green2", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_16,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_16,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_16)))+
+          scale_fill_gradientn(colours = "dodgerblue4", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+    observeEvent(input$goal_17,{
+      output$countryPlot <- renderGirafe({
+        countryMap <- map_data("world", region = input$country)
+        countryMap<- merge(countryMap,sdgsIndex1, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_17,
+                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_17)))+
+          scale_fill_gradientn(colours = "midnightblue", na.value = 'white') + 
+          
+          my_theme()+
+          ggtitle(input$country)
+        girafe(ggobj = c)
+        
+      })
+    })
+  })
   
   ######################################################## 3rd tab server side ##########################################
   # Indicators world map
