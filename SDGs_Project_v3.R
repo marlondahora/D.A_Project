@@ -156,6 +156,11 @@ sdgsMap[] <- lapply(sdgsMap, as.character)
 sdgsMap$Value <- as.numeric(sdgsMap$Value)
 #sdgsMap$Period <- as.numeric(sdgsMap$Period)
 
+# Index map
+sdgsIndexMap<- sdgsIndex
+names(sdgsIndexMap)[1] <- "region"
+sdgsIndexMap <- as.data.frame(sdgsIndexMap [, c(1:4,6,9:25)])
+
 ############# adding a region column in the worldMap dataset based on the SDGS regions ######
 # regions names if is needed 
 #sdgsRegionsNames<- c("Central Asia","Western Asia","Northern Africa","Sub-Saharan Africa","South-Eastern Asia","Southern Asia","Eastern Europe","Western Europe",
@@ -343,8 +348,8 @@ for (i in 1:nrow(worldMap)){
 rm(Central_Asia,Eastern_Asia,Western_Asia,Southern_Asia,South_Eastern_Asia,Sub_Saharan_Africa,
    Northern_Africa,Southern_Europe,Eastern_Europe,Western_Europe,Northern_Europe,Northern_America,
    Latin_America_and_the_Caribbean,Micronesia,Melanesia,Polynesia,Australia_and_New_Zealand,i,ix)
-
-### Creating a polar chart ####
+#tap1
+### Creating index polar chart ####
 polarIndex <- as.data.frame(sdgsIndex[,c(9:25)])
 polarIndex<- melt(data = polarIndex, measure.vars = c("Goal_1", "Goal_2","Goal_3", "Goal_4","Goal_5", "Goal_6","Goal_7", "Goal_8",
                                                       "Goal_9", "Goal_10","Goal_11", "Goal_12","Goal_13", "Goal_14","Goal_15",
@@ -362,14 +367,54 @@ polarIndex$variable <- factor(polarIndex$variable, labels = c( "Goal 1", "Goal 2
                                                                "Goal 9", "Goal 10","Goal 11", "Goal 12","Goal 13", "Goal 14","Goal 15",
                                                                "Goal 16","Goal 17" ))
 
+cores <- c("#FF3300","#FF9900","#00CC66","red3","red2","steelblue2",
+           "gold2","red4","#FF9933","deeppink3","orange3","orange4",
+           "green4","dodgerblue1","green2","dodgerblue4","midnightblue")
+
+sdgsLabels <- c( "Goal 1", "Goal 2","Goal 3", "Goal 4","Goal 5", "Goal 6","Goal 7", "Goal 8",
+                          "Goal 9", "Goal 10","Goal 11", "Goal 12","Goal 13", "Goal 14","Goal 15",
+                          "Goal 16","Goal 17" )
+
+### position chart index
+#top 10
+top10 <- tbl_df(sdgsIndex[order(sdgsIndex$Global_Rank),]) %>%
+  group_by(Global_Rank) %>%
+  top_n(10)
+top10 <- top10[c(1:10),]
+#bottom 10
+bottom10 <- tbl_df(sdgsIndex[order(-sdgsIndex$Global_Rank),]) %>%
+  group_by(Global_Rank) %>%
+  top_n(10)
+bottom10 <- bottom10[c(1:10),]
+bottom10 <- bottom10[order(bottom10$Global_Rank),]
+rankCores <- c(rep("blue",10), rep("red",10))
+topBottom <- rbind(top10,bottom10)
+topBottom <- topBottom[order(topBottom$Global_Rank),]
+
+topBottom$Country <- factor(topBottom$Country, levels = c("Denmark","Sweden","Finland","France","Austria","Germany" ,"Czech Republic","Norway","Netherlands","Estonia","Afghanistan","Niger","Sierra Leone","Haiti","Liberia","Madagascar","Nigeria","Congo, (Kinshasa)" ,"Chad","Central African Republic"),
+                            labels = c("Denmark","Sweden","Finland","France","Austria","Germany" ,"Czech Republic","Norway","Netherlands","Estonia","Afghanistan","Niger","Sierra Leone","Haiti","Liberia","Madagascar","Nigeria","Congo, (Kin.)" ,"Chad","C.African Rep."))
+
+### countries polar chart
+countriesPolar <- melt(sdgsIndexMap, id.vars = "region", measure.vars = c("Goal_1", "Goal_2","Goal_3", "Goal_4","Goal_5", "Goal_6","Goal_7", "Goal_8",
+                                                                          "Goal_9", "Goal_10","Goal_11", "Goal_12","Goal_13", "Goal_14","Goal_15",
+                                                                          "Goal_16","Goal_17"))                                                                         
+
 #### Building the maps ####
-# Index map
-sdgsIndexMap<- sdgsIndex
-names(sdgsIndexMap)[1] <- "region"
-sdgsIndexMap <- as.data.frame(sdgsIndexMap [, c(1:4,9:25)])
+
 sdgsIndexchoro <- merge(worldMap, sdgsIndexMap,  sort = FALSE, by = "region")
 sdgsIndexchoro <- sdgsIndexchoro[order(sdgsIndexchoro$order), ]
 str(sdgsIndexchoro)
+###Regions maps
+regions <- subset(sdgsMap, sdgsMap$GeoArea=="Central Asia"|sdgsMap$GeoArea=="Western Asia"|sdgsMap$GeoArea=="Northern Africa"|sdgsMap$GeoArea=="Sub-Saharan Africa"|sdgsMap$GeoArea=="South-Eastern Asia"
+                  |sdgsMap$GeoArea=="Southern Asia"|sdgsMap$GeoArea=="Eastern Europe"|sdgsMap$GeoArea=="Western Europe"|sdgsMap$GeoArea=="Southern Europe"|sdgsMap$GeoArea=="Northern Europe"
+                  |sdgsMap$GeoArea=="Northern Europe"|sdgsMap$GeoArea=="Polynesia"|sdgsMap$GeoArea=="Eastern Asia"|sdgsMap$GeoArea=="Northern America"|sdgsMap$GeoArea=="Micronesia"
+                  |sdgsMap$GeoArea=="Latin America and the Caribbean"|sdgsMap$GeoArea=="Melanesia"|sdgsMap$GeoArea=="Australia and New Zealand")
+names(regions)[3] <- "SDGsRegions"
+regions$Indicator <- str_replace_all(regions$Indicator, c(", by sex and age"=" in"))
+regions$Indicator <- str_replace_all(regions$Indicator, c(", by sex"=" in"))
+regions$Value <- round(regions$Value, digits=2)
+regions <- as.data.frame(regions [, -c(5,7)])
+
 
 # SDGs Map
 worldMaps <- function(sdgsMap, worldMap, goal, period, indicator){
@@ -379,9 +424,11 @@ worldMaps <- function(sdgsMap, worldMap, goal, period, indicator){
     theme_bw() + theme(axis.title = element_blank(),
                        axis.text = element_blank(),
                        axis.ticks = element_blank(),
+                       plot.title = element_blank(),
                        panel.grid.major = element_blank(), 
                        panel.grid.minor = element_blank(),
                        panel.background = element_blank(), 
+                       legend.title = element_blank(),
                        legend.position = "bottom",
                        panel.border = element_blank(), 
                        strip.background = element_rect(fill = 'white', colour = 'white'))
@@ -425,7 +472,8 @@ my_theme <- function () {
                      axis.ticks = element_blank(),
                      panel.grid.major = element_blank(), 
                      panel.grid.minor = element_blank(),
-                     panel.background = element_blank(), 
+                     panel.background = element_blank(),
+                     legend.title = element_blank(),
                      legend.position = "bottom",
                      panel.border = element_blank(), 
                      strip.background = element_rect(fill = 'white', colour = 'white'))
@@ -435,6 +483,7 @@ my_theme <- function () {
 
 my_polar_theme <- function(){
   theme(
+    text = element_text(size=15),
     legend.position = "none",
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
@@ -450,13 +499,14 @@ my_polar_theme <- function(){
 
 
 
-
 library(shiny)
 library(ggiraph)
 library(tidyverse)
 library(shinydashboard)
 library(shinydashboardPlus)
-
+library(RColorBrewer)
+library(forecast)
+library(scales)
 # Define the UI
 
 ui = dashboardPage(
@@ -482,6 +532,7 @@ ui = dashboardPage(
               fluidRow(
                 valueBoxOutput("populationBox"),
                 valueBoxOutput("povertyBox"),
+                valueBoxOutput("climateBox")
               ),
               fluidRow(
                 #################### buttons##############
@@ -582,6 +633,9 @@ ui = dashboardPage(
                 column(width = 3,
                        box(h1("SDGs Progress",align = "center"),width = "100%",
                            girafeOutput("indexPolarBar")
+                       ),
+                       box(h1("Countries Position",align = "center"),width = "100%",
+                           girafeOutput("indextPosition")
                        )
                 )
               )
@@ -590,12 +644,11 @@ ui = dashboardPage(
       tabItem(tabName = "countries",
               fluidRow(
                 column(width = 5,
-                       box(
-                         title = "Sdgs Countries",width = NULL,status = "primary",
-                         selectInput(inputId = "country",
-                                     label = "Please select a country:",
-                                     choices = unique(sdgsIndex$Country)
-                         )
+                       box(title = "SDGs Progress",width = NULL,status = "primary",
+                           selectInput(inputId = "country",
+                                       label = "Please select a country:",
+                                       choices = unique(sdgsIndex$Country)
+                           )
                        )
                 ),
                 column(width = 7,
@@ -707,16 +760,26 @@ ui = dashboardPage(
                 )
               ),
               fluidRow(
-                column(width = 5,
+                column(width = 3,
                        box(title = "Country",width = NULL,status = "primary",
                            userOutput("countryProfile")
                        )
                 ),
-                column(width = 7,
+                column(width = 5,
                        
-                       box(title = "Country",width = NULL,status = "primary",
+                       box(h2("SDGs Global Index Scores",align = "center"),
+                           h2( textOutput('title2'),align = "center"),
+                           h3( textOutput('title2.1'),align = "center"),
+                           width = NULL,status = "primary",
                            girafeOutput("countryPlot")
-                           
+                       )
+                       
+                ),
+                column(width = 4,
+                       box(h2("SDGs Progress",align = "center"),
+                           h2( textOutput('countrytitle'),align = "center"),
+                           width = NULL,status = "primary",
+                           girafeOutput("countryPolarBar")
                        ),
                        girafeOutput("linePlot")
                 )
@@ -727,45 +790,85 @@ ui = dashboardPage(
         tabName = "indicators",
         
         fluidRow(
-          box(
-            title = "SDGs Indicators Progress",
-            selectInput(inputId = "goal",
-                        label = "Please select a goal:",
-                        choices = unique(sdgsMap$Goal)
-                        
-            ),
-            uiOutput("secondSelection"),
-            uiOutput("thirdSelection")
+          column(width = 4,
+                 box(h2("SDGs Progress",align = "center"),width = "100%",
+                     selectInput(inputId = "goal",
+                                 label = "Please select a goal:",
+                                 choices = unique(sdgsMap$Goal)
+                                 
+                     ),
+                     uiOutput("secondSelection"),
+                     uiOutput("thirdSelection")
+                 )),
+          column(width = 8,
+                 box(h2("World Regions"),align = "center",
+                     h4( textOutput('IndicatorTitle'),align = "center"),width = "100%",
+                     girafeOutput("regionsPlot")
+                 )
+          )
+        ),
+        fluidPage(
+          column(width = 6,
+                 box(h2("Box Plot of the Regions",align = "center"),width = "100%",
+                     girafeOutput("regionBoxPlot"))
           ),
-          box(
-            title = "World Map",
-            #girafeOutput("distPlot")
+          column(width = 6,
+                 box(h2("Plot of the Regions",align = "center"),width = "100%",
+                     girafeOutput("regionLinePlot"))
           )
         )
         
       ),
       ######################################################## 4th tab ##########################################
       tabItem(tabName = "analytics",
-              fluidRow(
-                box(
-                  title = "Analytical Data",
-                  selectInput(inputId = "t2goal",
-                              label = "Please select a goal:",
-                              choices = unique(sdgsMap$Goal)
-                              
-                  ),
-                  uiOutput("t2secondSelection"),
-                  uiOutput("t2thirdSelection")
+              fluidPage(
+                column(width = 6,
+                       box(h2("Analysis of the SDGs Indicators",align = "center"),
+                           h3("Test of Normality & Time Series"),width = "100%",
+                           selectInput(inputId = "t2goal",
+                                       label = "Please select a goal:",
+                                       choices = unique(regions$Goal)
+                           ),
+                           uiOutput("t2secondSelection")
+                       ),
+                       box(title = "Dataset Table",width = "100%",
+                           DT::dataTableOutput(outputId = "table", width = "auto")
+                           #tableOutput("tablePlot")
+                       )
                 ),
-                box(title = "Box Plot",
-                    plotOutput("bPlot"),plotOutput("hPlot"),
-                    verbatimTextOutput("Result") 
-                ),
-                box(title = "Dataset Table",
-                    tableOutput("tablePlot")
+                column(width = 6,
+                       box(h3( "Box Plot Regions of World",align = "center"),
+                           h4( textOutput('IndicatorT'),align = "center"),width = "100%",
+                           girafeOutput("bPlot"),
+                           h5("The boxplot shows the median levels across all the regions and also the potential outliers in the data."),
+                           h3( "Histogram",align = "center"),
+                           h5("The histogram shows the distribution of the data across all regions."),
+                           plotOutput("hPlot"),
+                           h3( "Shapiro Wilk Normality Tests",align = "center"),
+                           h4("Hypothesis"),
+                           h5(textOutput("h0")),
+                           h5(textOutput("h1")),
+                           h5("α = The alfa value is set to 0.05 with 95% confidence rate."),
+                           verbatimTextOutput("Result"),
+                           h5(textOutput('hypo'))
+                       ),
+                       box(h3("Time Series Analysis",align = "center"),
+                           h4("ARIMA (Auto-Regressive Integrated Moving Averages)",align = "center"),
+                           h5("This analysis is based on the ARIMA model which is a great tool for forecast using historical data"),width = "100%",
+                           verbatimTextOutput("autoarima"),
+                           h4("Model Residuals",align = "center"),
+                           plotOutput("residualsP"),
+                           h4("Hypothesis"),
+                           h5(textOutput("tsh0")),
+                           h5(textOutput("tsh1")),
+                           h5("α = The alfa value is set to 0.05 with 95% confidence rate."),
+                           verbatimTextOutput("residuals"),
+                           h5(textOutput('tshypo')),
+                           h3("Indicator Prediction for 2030",align = "center"),
+                           plotOutput("prediction")
+                       )
                 )
               )
-              
       )
     )
   )
@@ -776,8 +879,8 @@ dashboardPage(header,sidebar,body)
 # Define the server
 server = function(input, output) {
   subsetInputs <- reactive({
-    subset(sdgsMap, sdgsMap$Goal == input$t2goal & sdgsMap$Indicator == input$t2indicator 
-           & sdgsMap$GeoArea == input$t2geoarea)
+    subset(regions, regions$Goal == input$t2goal & regions$Indicator == input$t2indicator 
+           & regions$SDGsRegions == input$t2geoarea)
     
   })
   ######################################################## 1st tab server side ##########################################
@@ -786,7 +889,7 @@ server = function(input, output) {
     pop<-sum(sdgsIndex$Population_in_2019)
     pop<-prettyNum(pop,big.mark=",",scientific=FALSE)
     valueBox(
-      pop, "Population in 2019", icon = icon("users"),
+      pop, "World population in 2019", icon = icon("users"),
       color = "purple"
     )
   })
@@ -794,17 +897,37 @@ server = function(input, output) {
   output$povertyBox <- renderValueBox({
     pov <- filter(sdgsMap, Indicator %in% "Employed population below international poverty line, by sex and age (%)" &
                     GeoArea %in%  "World" & Period %in% "2018")
+    pop<-sum(sdgsIndex$Population_in_2019)
     pov <- pov$Value
+    pov1 <- pov/100
+    pop1<- pop * pov1
+    pop1 <- round(pop1,digits = 0)
+    pop1 <-prettyNum(pop1,big.mark=",",scientific=FALSE)
     valueBox(
-      value = paste0(pov,"%"), 
-      subtitle = "Population in Poverty", 
+      value = pop1,
+      #value = paste0(pop1,"(",pov,"%",")"), 
+      #value = tags$li(h3(pop1), h4("(",pov,"%",")")),
+      subtitle = paste0("(",pov,"%",")"," Of the population remained poverty in 2019"), 
       #subtitle = tags$p("Population in Poverty",style = "font-size: 150%;"), 
-      icon = icon("thumbs-up", lib = "glyphicon"),
+      #icon = icon("thumbs-up", lib = "glyphicon"),
       color = "red"
     )
   })
   
-  #country maps
+  output$climateBox <- renderValueBox({
+    cli <- filter(sdgs, Indicator %in% "Number of deaths due to disaster (number)" &
+                    Period %in% "2018")
+    cliTotal <- sum(cli$Value)
+    cliTotal<-prettyNum(cliTotal,big.mark=",",scientific=FALSE)
+    valueBox(
+      value = paste0(cliTotal), 
+      subtitle = "Number of deaths due to climate changes in 2018",
+      #icon = icon("thumbs-up", lib = "glyphicon"),
+      color = "green"
+    )
+  })
+  
+  #countries maps
   output$title <- renderText({"Global Score Progress Of All SDGs"})
   output$indexPlot <- renderGirafe({
     m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
@@ -822,14 +945,38 @@ server = function(input, output) {
                              aes(
                                x = variable,
                                y = value,
-                               fill = factor(variable),
+                               fill = variable,
                                tooltip = sprintf("%s<br/>%s", polarIndex$variable, polarIndex$value)
                              )) +
       geom_col_interactive(width = 1, color = "white")+
+      #scale_fill_manual_interactive(values=cores)+
       coord_polar()+
-    my_polar_theme()
+      my_polar_theme()
     girafe(ggobj = plotpolarIndex)
   })
+  #position chart
+  output$indextPosition <- renderGirafe({
+    p <- ggplot(topBottom, aes(x=reorder(Country,-Global_Rank), y=Global_Score, fill= reorder(Country,-Global_Rank),
+                               tooltip = sprintf("%s<br/>%s", topBottom$Country,topBottom$Global_Rank))) +
+      geom_bar_interactive(stat="identity", alpha=.5, width=.6) +
+      geom_text(aes(label = Global_Score, y = Global_Score -2), size = 2)+
+      scale_fill_manual_interactive(values=rankCores)+
+      coord_flip() +
+      xlab("") +
+      ylab("")+
+      theme(
+        text = element_text(size=15),
+        legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x = element_text(),
+        panel.grid.major = element_line_interactive(size = 0.1, linetype = 'solid',
+                                                    colour = "grey"), 
+        panel.background = element_rect(fill = 'transparent', colour = 'transparent'),
+        strip.background = element_rect(fill = 'transparent', colour = 'transparent'))
+    girafe(ggobj = p)
+  })
+  
   
   ######################### actions buttons ############
   observeEvent(input$wgoal_1,{
@@ -1107,39 +1254,63 @@ server = function(input, output) {
     )
   })
   #country plot
+  output$title2 <- renderText({"Regional Index Score"})
   output$countryPlot <- renderGirafe({
     
-    countryMap <- map_data("world", region = input$country)
-    countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-    c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Global_Score,
-                                                                   tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Global_Score)))+
+    countryMap <- subset(worldMap, region == input$country)     
+    countryMapInd <- subset(sdgsIndexMap, region == input$country)
+    countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+    c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Regional_Score,
+                                                                        tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Regional_Score)))+
       scale_fill_gradientn(colours = "skyblue2", na.value = 'white') + 
       
       my_theme()+
       ggtitle(input$country)
     girafe(ggobj = c)
   })
+  #Polar bar
+  output$countrytitle <- renderText({input$country})
+  output$countryPolarBar <- renderGirafe({
+    
+    countriesPolarChart <- subset(countriesPolar, region == input$country)
+    countriesPolarChart$variable <- factor(countriesPolarChart$variable, labels = sdgsLabels)
+    plotpolarCountries <- ggplot(countriesPolarChart,
+                                 aes(
+                                   x = variable,
+                                   y = value,
+                                   fill = variable,
+                                   tooltip = sprintf("%s<br/>%s", countriesPolarChart$variable, countriesPolarChart$value)
+                                 )) +
+      scale_fill_manual_interactive(values=cores)+
+      geom_col_interactive(width = 1, color = "white")+
+      coord_polar()+
+      my_polar_theme()
+    girafe(ggobj = plotpolarCountries)
+  })
   
   observeEvent(input$goal_1,{
+    output$title2 <- renderText({"Goal:1 No Poverty"})
     output$linePlot <- renderGirafe({
       #tmp<- sdgsMap$GeoArea == input$country
-      tmp <- subset(sdgsMap, Indicator == "Employed population below international poverty line, by sex and age (%)" & GeoArea == input$country)
+      tmp <- subset(g1EmpPovert, Country == input$country)
       wp<-ggplot(tmp) +
         aes(x = Period, y = Value, group=1,
-            tooltip = sprintf("%s<br/>%s", tmp$Goal, tmp$Value)) +
+            tooltip = sprintf("%s<br/>%s", tmp$Country, tmp$Value)) +
         geom_point_interactive(size = 2L, colour = "#ef562d") +
         geom_line_interactive(color="blue", size=1)+
         #geom_smooth_interactive(stat = "smooth", method = "loess") +
-        geom_text(aes(label = Value, y = Value +0.5), size = 2)+
+        #geom_text(aes(label = Value, y = Value +0.5), size = 2)+
         theme_minimal()
       
       girafe(ggobj = wp)
     })
+    
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_1,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_1)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_1,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_1)))+
         scale_fill_gradientn(colours = "red", na.value = 'white') + 
         
         my_theme()+
@@ -1149,11 +1320,13 @@ server = function(input, output) {
     })
   })
   observeEvent(input$goal_2,{
+    output$title2 <- renderText({"Goal:2 Zero Hunger"})
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_2,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_2)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_2,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_2)))+
         scale_fill_gradientn(colours = "orange", na.value = 'white') + 
         
         my_theme()+
@@ -1163,11 +1336,13 @@ server = function(input, output) {
     })
   })
   observeEvent(input$goal_3,{
+    output$title2 <- renderText({"Goal:3 Good Health and Well-being"})
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_3,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_3)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_3,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_3)))+
         scale_fill_gradientn(colours = "green3", na.value = 'white') + 
         
         my_theme()+
@@ -1177,11 +1352,13 @@ server = function(input, output) {
     })
   })
   observeEvent(input$goal_4,{
+    output$title2 <- renderText({"Goal:4 Quality Education"})
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_4,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_4)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_4,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_4)))+
         scale_fill_gradientn(colours = "red3", na.value = 'white') + 
         
         my_theme()+
@@ -1191,11 +1368,13 @@ server = function(input, output) {
     })
   })
   observeEvent(input$goal_5,{
+    output$title2 <- renderText({"Goal:5 Gender Equality"})
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_5,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_5)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_5,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_5)))+
         scale_fill_gradientn(colours = "red2", na.value = 'white') + 
         
         my_theme()+
@@ -1205,11 +1384,13 @@ server = function(input, output) {
     })
   })
   observeEvent(input$goal_6,{
+    output$title2 <- renderText({"Goal:6 Clean Water and Sanitation"})
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_6,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_6)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_6,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_6)))+
         scale_fill_gradientn(colours = "steelblue2", na.value = 'white') + 
         
         my_theme()+
@@ -1219,11 +1400,13 @@ server = function(input, output) {
     })
   })
   observeEvent(input$goal_7,{
+    output$title2 <- renderText({"Goal:7 Affordable and Clean Energy"})
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_7,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_7)))+
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_7,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_7)))+
         scale_fill_gradientn(colours = "gold2", na.value = 'white') + 
         
         my_theme()+
@@ -1234,10 +1417,13 @@ server = function(input, output) {
   })
   observeEvent(input$goal_8,{
     output$countryPlot <- renderGirafe({
-      countryMap <- map_data("world", region = input$country)
-      countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-      c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_8,
-                                                                     tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_8)))+
+      output$title2 <- renderText({"Goal:8 Decent Work and Economic Growth"})
+      output$title2.1 <- renderText({input$country})
+      countryMap <- subset(worldMap, region == input$country)     
+      countryMapInd <- subset(sdgsIndexMap, region == input$country)
+      countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+      c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_8,
+                                                                          tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_8)))+
         scale_fill_gradientn(colours = "red4", na.value = 'white') + 
         
         my_theme()+
@@ -1247,10 +1433,12 @@ server = function(input, output) {
     })
     observeEvent(input$goal_9,{
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_9,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_9)))+
+        output$title2 <- renderText({"Goal:9 Industry, Innovation and Infrastructure"})
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_9,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_9)))+
           scale_fill_gradientn(colours = "orangered1", na.value = 'white') + 
           
           my_theme()+
@@ -1260,11 +1448,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_10,{
+      output$title2 <- renderText({"Goal:10 Reduced Inequality"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_10,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_10)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_10,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_10)))+
           scale_fill_gradientn(colours = "deeppink3", na.value = 'white') + 
           
           my_theme()+
@@ -1274,11 +1464,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_11,{
+      output$title2 <- renderText({"Goal:11 Sustainable Cities and Communities"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_11,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_11)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_11,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_11)))+
           scale_fill_gradientn(colours = "orange3", na.value = 'white') + 
           
           my_theme()+
@@ -1288,11 +1480,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_12,{
+      output$title2 <- renderText({"Goal:12 Responsible Consumption and Production"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_12,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_12)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_12,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_12)))+
           scale_fill_gradientn(colours = "orange4", na.value = 'white') + 
           
           my_theme()+
@@ -1302,11 +1496,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_13,{
+      output$title2 <- renderText({"Goal:13 Climate Action"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_13,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_13)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_13,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_13)))+
           scale_fill_gradientn(colours = "green4", na.value = 'white') + 
           
           my_theme()+
@@ -1316,11 +1512,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_14,{
+      output$title2 <- renderText({"Goal:14 Life Below Water"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_14,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_14)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_14,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_14)))+
           scale_fill_gradientn(colours = "dodgerblue1", na.value = 'white') + 
           
           my_theme()+
@@ -1330,11 +1528,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_15,{
+      output$title2 <- renderText({"Goal:15 Life on Land"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_15,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_15)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_15,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_15)))+
           scale_fill_gradientn(colours = "green2", na.value = 'white') + 
           
           my_theme()+
@@ -1344,11 +1544,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_16,{
+      output$title2 <- renderText({"Goal:16 Peace and Justice Strong Institutions"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_16,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_16)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_16,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_16)))+
           scale_fill_gradientn(colours = "dodgerblue4", na.value = 'white') + 
           
           my_theme()+
@@ -1358,11 +1560,13 @@ server = function(input, output) {
       })
     })
     observeEvent(input$goal_17,{
+      output$title2 <- renderText({"Goal:17 Partnerships to achieve the Goal"})
       output$countryPlot <- renderGirafe({
-        countryMap <- map_data("world", region = input$country)
-        countryMap<- merge(countryMap,sdgsIndexMap, sort = FALSE, by = "region")
-        c<- ggplot() + geom_polygon_interactive(data = countryMap, aes(x=long, y = lat, group = group,fill = countryMap$Goal_17,
-                                                                       tooltip = sprintf("%s<br/>%s", countryMap$id, countryMap$Goal_17)))+
+        countryMap <- subset(worldMap, region == input$country)     
+        countryMapInd <- subset(sdgsIndexMap, region == input$country)
+        countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
+        c<- ggplot() + geom_polygon_interactive(data = countryMapIndex, aes(x=long, y = lat, group = group,fill = countryMapIndex$Goal_17,
+                                                                            tooltip = sprintf("%s<br/>%s", countryMapIndex$id, countryMapIndex$Goal_17)))+
           scale_fill_gradientn(colours = "midnightblue", na.value = 'white') + 
           
           my_theme()+
@@ -1375,69 +1579,199 @@ server = function(input, output) {
   
   ######################################################## 3rd tab server side ##########################################
   # Indicators world map
-  output$distPlot <- renderGirafe({
-    ggiraph(code = print(worldMaps(sdgsMap, world_data, input$goal, input$period, input$indicator)))
+  output$IndicatorTitle <- renderText({input$indicator})
+  output$regionsPlot <- renderGirafe({
+    regionsMap1<- subset(regions, regions$Goal == input$goal & regions$Indicator == input$indicator & regions$Period == input$period )
+    
+    regionsMap1 <- merge(worldMap, regionsMap1,  sort = FALSE, by = "SDGsRegions")
+    regionsMap1 <- regionsMap1[order(regionsMap1$order), ]
+    m<-ggplot(regionsMap1, aes(long, lat)) +
+      geom_polygon_interactive(aes(group = group, fill = regionsMap1$Value,
+                                   tooltip = sprintf("%s<br/>%s", regionsMap1$SDGsRegions, regionsMap1$Value)),color = "white")+
+      scale_fill_gradientn(colors = rev(brewer.pal(5, "RdBu")), na.value = 'white') + 
+      scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
+      scale_x_continuous(breaks = c()) +
+      my_theme()
+    girafe(ggobj = m, width = 15,height=9)
+  })
+  output$regionBoxPlot <-renderGirafe({
+    boxregions <- data.frame(subset(regions, regions$Goal == input$goal & regions$Indicator == input$indicator))
+    names(boxregions)[3] <- "GeoArea"
+    b <- ggplot(boxregions) +
+      aes(x = GeoArea, y = Value, fill = GeoArea, tooltip = GeoArea) +
+      geom_boxplot_interactive(outlier.colour = "red" ) +
+      guides(fill = "none") + 
+      labs(y = "Levels in %", x = "Regions")+
+      theme_minimal()+
+      theme(panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank(),
+            text = element_text(family = "Times New Roman", size = 12 ))
+    girafe(ggobj = b )
     
   })
-  
+  output$regionLinePlot <- renderGirafe({
+    lineregions <- data.frame(subset(regions, regions$Goal == input$goal & regions$Indicator == input$indicator))
+    lineregions <- na.omit(lineregions)
+    lineregions <- lineregions%>%
+      select(Period,Value)%>%
+      group_by(Period) %>%
+      summarise(Value = mean(Value))
+    lineregions$Value<- round(lineregions$Value, digits=2)
+    
+    l <- ggplot(lineregions) +
+      aes(x = Period, y = Value,group=1,
+          tooltip = sprintf("%s<br/>%s", lineregions$Period , lineregions$Value) )+
+      geom_point_interactive (size = 3L, colour = "#ef562d") +
+      #geom_smooth (method = "loess") +
+      geom_line(color="blue", size=1)+
+      #geom_text_interactive (aes(label = Value, y = Value +1), size = 3)+
+      labs(x = "Period of Time", y = "Levels in %") +
+      
+      theme_minimal()+
+      theme(axis.text.x = element_text( angle = 45),
+            text = element_text(family = "Times New Roman", size = 12 ))
+    
+    girafe(ggobj = l)
+  })
   # Change the choices for the second selection on the basis of the input to the first selection
   output$secondSelection <- renderUI({
-    choice_second <- as.list(unique(sdgsMap$Indicator[which(sdgsMap$Goal == input$goal)]))
+    choice_second <- as.list(unique(regions$Indicator[which(regions$Goal == input$goal)]))
     selectInput(inputId = "indicator", choices = choice_second,
                 label = "Choose the indicator for which you want to see the data:")
   })
   
   # Change the choices for the third selection on the basis of the input to the first and second selections
   output$thirdSelection <- renderUI({
-    choice_third <- as.list(unique(sdgsMap$Period[sdgsMap$Goal == input$goal & sdgsMap$Indicator == input$indicator]))
+    choice_third <- as.list(unique(regions$Period[regions$Goal == input$goal & regions$Indicator == input$indicator]))
     selectInput(inputId = "period", choices = choice_third,
                 label = paste0("Choose the type of  you want to explore:"))
-  })    
+  }) 
   
   ######################################################## 4th tab server side ##########################################
-  #table plot
-  output$tablePlot <- renderTable({
-    subsetInputs()
+  t2subsetInputs <- reactive({
+    subset(regions, regions$Goal == input$t2goal & regions$Indicator == input$t2indicator)
+    
   })
+  output$IndicatorT <- renderText({input$t2indicator})
+  output$h0 <- renderText({paste0("H₀: The null hypothesis states that data in ", input$t2indicator, " is normally distributed.")})
+  output$h1 <- renderText({paste0("H₁: The alternative hypothesis states that data in ", input$t2indicator, " is not normally distributed.")})
+  
+  output$tsh0 <- renderText({paste0("H₀: The null hypothesis states that data in ", input$t2indicator, " is stationary.")})
+  output$tsh1 <- renderText({paste0("H₁: The alternative hypothesis states that data in ", input$t2indicator, " is not stationary.")})
+  
+  #table plot
+  
+  output$table <- DT::renderDT({
+    bx <- t2subsetInputs()
+  }, options = list(pageLength = 20))
   
   #box Plot
-  output$bPlot <- renderPlot({
-    bx <- subsetInputs()
-    bx$GeoArea <- as.factor(bx$GeoArea)
-    ggplot(bx, aes(x=GeoArea, y=Value)) + 
-      geom_boxplot()
-    #hist(bx$Value)
-    #boxplot(bx$Value)
-    
+  output$bPlot <- renderGirafe ({
+    boxregions <- t2subsetInputs()
+    ba <- ggplot(boxregions) +
+      aes(x = SDGsRegions, y = Value, fill = SDGsRegions, tooltip = SDGsRegions) +
+      geom_boxplot_interactive(outlier.colour = "red" ) +
+      guides(fill = "none") + 
+      labs(y = "Levels in %", x = "Regions")+
+      theme_minimal()+
+      theme(panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank(),
+            text = element_text(family = "Times New Roman", size = 12 ))
+    girafe(ggobj = ba )
     
   })
   
   #hist plot
   output$hPlot <- renderPlot({
-    bx <- subsetInputs()
-    hist(bx$Value)
+    bx <- t2subsetInputs()
+    hist(bx$Value, col = "blue", border = "skyblue", main = "",xlab="Values")
     
   })
   
   #Shapiro-Wilk normality test
-  output$Result <- renderPrint({
-    bx <- subsetInputs()
+  shp <- reactive({
+    bx <- t2subsetInputs()
     shapiro.test(bx$Value)
+    
+  })
+  output$Result <- renderPrint({
+    shp()
+    
+  })
+  
+  output$hypo <- renderText({
+    
+    if (shp()$p.value <0.05) {
+      "In this case the P-value < 0.05 reject H₀. Therefore, the data IS NOT normally distributed across the regions."
+    } else {
+      "In this case the P-value > 0.05 fail to reject H₀. Therefore, the data IS normally distributed across the regions."
+    }
+  })
+  
+  output$prediction <- renderPlot({
+    
+    tmp<- t2subsetInputs()
+    tmp <- na.omit(tmp)
+    ts <- tmp%>%
+      select(Period,Value)%>%
+      group_by(Period) %>%
+      summarise(Value = mean(Value))
+    ts$Value<- round(ts$Value, digits=2)
+    ts$Period <- as.numeric (ts$Period)
+    ts <- ts(ts$Value, freq=1,start =min(ts$Period), end = max (ts$Period))
+    
+    tsOPT <- auto.arima(ts)
+    
+    coef(tsOPT)
+    predict(tsOPT, n.ahead = 12, se.fit = T)
+    indicator.forcast <- forecast(object = tsOPT, h = 12)
+    checkresiduals(indicator.forcast)
+    par(mfrow=c(1,2))
+    plot.ts(ts,xlab="Period of Time" , ylab="Levels in %" , main="Actual")
+    plot(indicator.forcast, xlab="Period of Time" , ylab="Levels in %" , main="Forecast", col = "red", lwd=1 , pch=17 )
+    abline(h=0, col="blue",lty=2)
+    
+    output$autoarima <- renderPrint({
+      tsOPT
+    })
+    output$residualsP <- renderPlot ({
+      checkresiduals(indicator.forcast)
+    })
+    output$residuals <- renderPrint({
+      checkresiduals(indicator.forcast)
+    })
+    output$tshypo <- renderText({
+      res<-checkresiduals(indicator.forcast)
+      if (res$p.value <0.05) {
+        "In this case the P-value < 0.05 reject H₀. Therefore, the data IS NOT stationay."
+      } else {
+        "In this case the P-value > 0.05 fail to reject H₀. Therefore, the data IS stationay.."
+      }
+    })
+    
   })
   
   # Change the choices for the second selection on the basis of the input to the first selection
   output$t2secondSelection <- renderUI({
-    t2choice_second <- as.list(unique(sdgsMap$Indicator[which(sdgsMap$Goal == input$t2goal)]))
+    t2choice_second <- as.list(unique(regions$Indicator[which(regions$Goal == input$t2goal)]))
     selectInput(inputId = "t2indicator", choices = t2choice_second,
-                label = "Choose the indicator for which you want to see the data:")
+                label = "Choose the indicator for analysis:")
   })
-  
   # Change the choices for the third selection on the basis of the input to the first and second selections
   output$t2thirdSelection <- renderUI({
-    t2choice_third <- as.list(unique(sdgsMap$GeoArea[sdgsMap$Goal == input$t2goal & sdgsMap$Indicator == input$t2indicator]))
+    t2choice_third <- as.list(unique(regions$SDGsRegions[regions$Goal == input$t2goal & regions$Indicator == input$t2indicator]))
     selectInput(inputId = "t2geoarea", choices = t2choice_third,
                 label = paste0("Choose the type of  you want to explore:"))
   })
+  
 }
 
 shinyApp(ui = ui, server = server)
