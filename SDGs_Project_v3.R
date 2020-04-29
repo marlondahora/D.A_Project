@@ -475,6 +475,9 @@ my_theme <- function () {
                      panel.background = element_blank(),
                      legend.title = element_blank(),
                      legend.position = "bottom",
+                     legend.text = element_text(size =15 ),
+                     legend.key.size = unit(1.0, "cm"),
+                     legend.key.width = unit(2.5,"cm"),
                      panel.border = element_blank(), 
                      strip.background = element_rect(fill = 'white', colour = 'white'))
   
