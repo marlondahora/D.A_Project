@@ -501,7 +501,6 @@ my_polar_theme <- function(){
 }
 
 
-
 library(shiny)
 library(ggiraph)
 library(tidyverse)
@@ -628,16 +627,24 @@ ui = dashboardPage(
               ),
               #################### outputs ##############
               fluidRow(
+                column(width = 3,
+                       box(h1("SDGs Progress",align = "center"),width = "100%"
+                       )
+                ),
                 column(width = 9,
                        box(h1( textOutput('title'),align = "center"),width = "100%",
                            girafeOutput("indexPlot",width = "100%"),
                        )
-                ),
-                column(width = 3,
-                       box(h1("SDGs Progress",align = "center"),width = "100%",
+                )
+              ),
+              fluidPage(
+                column(width = 6,
+                       box(h2("SDGs Progress",align = "center"),width = "100%",
                            girafeOutput("indexPolarBar")
-                       ),
-                       box(h1("Countries Position",align = "center"),width = "100%",
+                       )
+                ),
+                column(width = 6,
+                       box(h2("Countries Position",align = "center"),width = "100%",
                            girafeOutput("indextPosition")
                        )
                 )
@@ -646,7 +653,7 @@ ui = dashboardPage(
       ######################################################## 2nd tab ##########################################
       tabItem(tabName = "countries",
               fluidRow(
-                column(width = 5,
+                column(width = 6,
                        box(title = "SDGs Progress",width = NULL,status = "primary",
                            selectInput(inputId = "country",
                                        label = "Please select a country:",
@@ -654,7 +661,7 @@ ui = dashboardPage(
                            )
                        )
                 ),
-                column(width = 7,
+                column(width = 6,
                        box(title = "SDGs",width = NULL,status = "primary",
                            tags$button(
                              id = "goal_1",
@@ -672,49 +679,49 @@ ui = dashboardPage(
                                        id = "goal_3",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_4",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_5",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_6",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_7",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_8",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_9",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_10",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_11",
@@ -726,49 +733,54 @@ ui = dashboardPage(
                                        id = "goal_12",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_13",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_14",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_15",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_16",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
-                                                height = "40px",)
+                                                height = "40px")
                            ),
                            tags$button(style="border-radio: 10px",
                                        id = "goal_17",
                                        class = "btn action-button",
                                        tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
-                                                height = "40px",)
+                                                height = "40px")
                            )
                            
                        )
                 )
               ),
               fluidRow(
-                column(width = 3,
+                column(width = 6,
                        box(title = "Country",width = NULL,status = "primary",
                            userOutput("countryProfile")
+                       ),
+                       box(h2("SDGs Progress",align = "center"),
+                           h2( textOutput('countrytitle'),align = "center"),
+                           width = NULL,status = "primary",
+                           girafeOutput("countryPolarBar")
                        )
                 ),
-                column(width = 5,
+                column(width = 6,
                        
                        box(h2("SDGs Global Index Scores",align = "center"),
                            h2( textOutput('title2'),align = "center"),
@@ -776,15 +788,6 @@ ui = dashboardPage(
                            width = NULL,status = "primary",
                            girafeOutput("countryPlot")
                        )
-                       
-                ),
-                column(width = 4,
-                       box(h2("SDGs Progress",align = "center"),
-                           h2( textOutput('countrytitle'),align = "center"),
-                           width = NULL,status = "primary",
-                           girafeOutput("countryPolarBar")
-                       ),
-                       girafeOutput("linePlot")
                 )
               )
       ),
@@ -989,7 +992,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_1)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(1, "Reds"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(1, "Reds")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1003,7 +1006,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_2)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(4, "YlOrRd"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(4, "YlOrRd")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1017,7 +1020,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_3)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(5, "Greens"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(5, "Greens")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1031,7 +1034,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_4)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(5, "Reds"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(5, "Reds")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1045,7 +1048,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_5)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(5, "PuOr"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(5, "PuOr")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1059,7 +1062,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_6)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(5, "Blues"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(5, "Blues")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1073,7 +1076,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_7)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(3, "YlOrRd"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(3, "YlOrRd")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1087,7 +1090,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_8)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(3, "RdBu"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(3, "RdBu")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1115,7 +1118,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_10)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(3, "PiYG"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(3, "PiYG")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1129,7 +1132,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_11)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(1, "Oranges"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(1, "Oranges")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1143,7 +1146,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_12)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(4, "YlOrBr"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(4, "YlOrBr")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1157,7 +1160,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_13)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(5, "Greens"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(5, "Greens")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1171,7 +1174,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_14)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(5, "Blues"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(5, "Blues")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1186,7 +1189,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_15)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(4, "Greens"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(4, "Greens")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1200,7 +1203,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_16)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(6, "Blues"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(6, "Blues")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1214,7 +1217,7 @@ server = function(input, output) {
       m<-ggplot(sdgsIndexchoro, aes(long, lat)) +
         geom_polygon_interactive(aes(group = group, fill = sdgsIndexchoro$Global_Score,
                                      tooltip = sprintf("%s<br/>%s", sdgsIndexchoro$id, sdgsIndexchoro$Goal_17)),color = "white")+
-        scale_fill_gradientn(colours = brewer.pal(7, "Blues"), na.value = 'white') + 
+        scale_fill_gradientn(colours = rev(brewer.pal(7, "Blues")), na.value = 'white') + 
         scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
         scale_x_continuous(breaks = c()) +
         my_theme()
@@ -1590,12 +1593,12 @@ server = function(input, output) {
     regionsMap1 <- regionsMap1[order(regionsMap1$order), ]
     m<-ggplot(regionsMap1, aes(long, lat)) +
       geom_polygon_interactive(aes(group = group, fill = regionsMap1$Value,
-                                   tooltip = sprintf("%s<br/>%s", regionsMap1$SDGsRegions, regionsMap1$Value)),color = "white")+
+                                   tooltip = sprintf("%s<br/>%s", regionsMap1$SDGsRegions, regionsMap1$Value)))+
       scale_fill_gradientn(colors = rev(brewer.pal(5, "RdBu")), na.value = 'white') + 
       scale_y_continuous(limits = c(-60, 100), breaks = c()) + 
       scale_x_continuous(breaks = c()) +
       my_theme()
-    girafe(ggobj = m, width = 15,height=9)
+    girafe(ggobj = m, width = 15, height=9)
   })
   output$regionBoxPlot <-renderGirafe({
     boxregions <- data.frame(subset(regions, regions$Goal == input$goal & regions$Indicator == input$indicator))
@@ -1778,3 +1781,4 @@ server = function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)
+
