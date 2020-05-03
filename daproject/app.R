@@ -160,87 +160,87 @@ ui = dashboardPage(
                 tags$button(
                   id = "wgoal_1",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-01.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-01.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_2",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-02.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-02.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_3",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-03.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_4",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-04.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_5",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-05.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_6",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-06.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_7",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-07.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_8",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-08.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_9",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-09.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_10",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-10.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_11",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-11.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-11.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_12",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-12.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_13",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-13.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_14",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-14.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_15",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-15.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_16",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-16.png",
                            height = "40px")),
                 tags$button(
                   id = "wgoal_17",
                   class = "btn action-button",
-                  tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
+                  tags$img(src = "SDG_Icons_2019/E-WEB-Goal-17.png",
                            height = "40px")),
                 
               ),
@@ -292,103 +292,103 @@ ui = dashboardPage(
                      tags$button(
                        id = "goal_1",
                        class = "btn action-button",
-                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-01.png",
+                       tags$img(src = "SDG_Icons_2019/E-WEB-Goal-01.png",
                                 height = "40px")
                      ),
                      tags$button(
                        id = "goal_2",
                        class = "btn action-button",
-                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-02.png",
+                       tags$img(src = "SDG_Icons_2019/E-WEB-Goal-02.png",
                                 height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_3",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-03.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_4",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-04.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_5",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-05.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_6",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-06.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_7",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-07.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_8",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-08.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_9",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-09.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_10",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-10.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_11",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-11.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-11.png",
                                           height = "40px",)
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_12",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-12.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_13",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-13.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_14",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-14.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_15",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-15.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_16",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-16.png",
                                           height = "40px")
                      ),
                      tags$button(style="border-radio: 10px",
                                  id = "goal_17",
                                  class = "btn action-button",
-                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
+                                 tags$img(src = "SDG_Icons_2019/E-WEB-Goal-17.png",
                                           height = "40px")
                      )
                  )
@@ -858,7 +858,7 @@ server = function(input, output) {
   output$countryProfile <- renderUser({
     lower <- tolower(input$country)
     lower<- str_replace_all(lower, " ","-")
-    path <- "http://109.255.170.99:8787/files/D.A_Project/country_icons/"
+    path <- "country_icons"
     logo <- paste(path,lower,".svg",sep = "")
     pop<- sdgsIndex$Population_in_2019[ sdgsIndex$Country == input$country]
     pop<- prettyNum(pop,big.mark=",",scientific=FALSE)
