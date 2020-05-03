@@ -7,11 +7,12 @@ library(shinydashboardPlus)
 library(RColorBrewer)
 library(forecast)
 library(scales)
+library(shinycssloaders)
 
-load("~/D.A_Project/sdgs.RData")
-load("~/D.A_Project/sdgsMap.RData")
-load("~/D.A_Project/sdgsIndex.RData")
-load("~/D.A_Project/worldMap.RData")
+load("sdgs.RData")
+load("sdgsMap.RData")
+load("sdgsIndex.RData")
+load("worldMap.RData")
 #sdgs<-read.csv("sdgs.csv")
 #sdgs<- sdgs[,-c(1)]
 #sdgsMap<-read.csv("sdgsMap.csv")
@@ -256,170 +257,168 @@ ui = dashboardPage(
                 column(width = 9,
                        box(h2( textOutput('title'),align = "center"),
                            h3("Countries Index Score 2019",align = "center"),width = "100%",
-                           girafeOutput("indexPlot",width = "100%"),
+                           withSpinner(girafeOutput("indexPlot",width = "100%")),
                        )
                 )
               ),
               fluidPage(
                 column(width = 6,
                        box(h2("SDGs Progress",align = "center"),width = "100%",
-                           girafeOutput("indexPolarBar")
+                           withSpinner(girafeOutput("indexPolarBar"))
                        )
                 ),
                 column(width = 6,
                        box(h2("Countries Position",align = "center"),width = "100%",
-                           girafeOutput("indextPosition")
+                           withSpinner(girafeOutput("indextPosition"))
                        )
                 )
               ),
               
       ), 
       ######################################################## 2nd tab ##########################################
-      tabItem(tabName = "countries",
-              fluidRow(
-                column(width = 6,
-                       box(title = "SDGs Progress",width = NULL,status = "primary",
-                           selectInput(inputId = "country",
-                                       label = "Please select a country:",
-                                       choices = unique(sdgsIndex$Country)
-                           )
-                       )
-                ),
-                column(width = 6,
-                       box(title = "SDGs",width = NULL,status = "primary",
-                           tags$button(
-                             id = "goal_1",
-                             class = "btn action-button",
-                             tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-01.png",
-                                      height = "40px")
-                           ),
-                           tags$button(
-                             id = "goal_2",
-                             class = "btn action-button",
-                             tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-02.png",
-                                      height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_3",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_4",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_5",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_6",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_7",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_8",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_9",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_10",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_11",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-11.png",
-                                                height = "40px",)
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_12",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_13",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_14",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_15",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_16",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
-                                                height = "40px")
-                           ),
-                           tags$button(style="border-radio: 10px",
-                                       id = "goal_17",
-                                       class = "btn action-button",
-                                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
-                                                height = "40px")
-                           )
-                           
-                       )
-                )
-              ),
-              fluidRow(
-                column(width = 6,
-                       box(title = "Country",width = NULL,status = "primary",
-                           userOutput("countryProfile")
-                       ),
-                       box(h2("SDGs Progress",align = "center"),
-                           h2( textOutput('countrytitle'),align = "center"),
-                           width = NULL,status = "primary",
-                           girafeOutput("countryPolarBar")
-                       )
-                ),
-                column(width = 6,
-                       
-                       box(h2("SDGs Global Index Scores",align = "center"),
-                           h2( textOutput('title2'),align = "center"),
-                           h3( textOutput('title2.1'),align = "center"),
-                           width = NULL,status = "primary",
-                           girafeOutput("countryPlot")
-                       )
-                )
-              ),
-              
+      tabItem(
+        tabName = "countries",
+        fluidRow(
+          column(width = 6,
+                 box(title = "SDGs Progress",width = NULL,status = "primary",
+                     selectInput(inputId = "country",
+                                 label = "Please select a country:",
+                                 choices = unique(sdgsIndex$Country)
+                     )
+                 )
+          ),
+          column(width = 6,
+                 box(title = "SDGs",width = NULL,status = "primary",
+                     tags$button(
+                       id = "goal_1",
+                       class = "btn action-button",
+                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-01.png",
+                                height = "40px")
+                     ),
+                     tags$button(
+                       id = "goal_2",
+                       class = "btn action-button",
+                       tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-02.png",
+                                height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_3",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-03.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_4",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-04.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_5",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-05.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_6",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-06.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_7",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-07.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_8",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-08.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_9",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-09.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_10",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-10.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_11",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-11.png",
+                                          height = "40px",)
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_12",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-12.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_13",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-13.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_14",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-14.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_15",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-15.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_16",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-16.png",
+                                          height = "40px")
+                     ),
+                     tags$button(style="border-radio: 10px",
+                                 id = "goal_17",
+                                 class = "btn action-button",
+                                 tags$img(src = "http://109.255.170.99:8787/files/D.A_Project/SDG_Icons_2019/E-WEB-Goal-17.png",
+                                          height = "40px")
+                     )
+                 )
+          )
+        ),
+        fluidRow(
+          column(width = 6,
+                 box(title = "Country",width = NULL,status = "primary",
+                     userOutput("countryProfile")
+                 ),
+                 box(h2("SDGs Progress",align = "center"),
+                     h2( textOutput('countrytitle'),align = "center"),
+                     width = NULL,status = "primary",
+                     withSpinner(girafeOutput("countryPolarBar"))
+                 )
+          ),
+          column(width = 6,
+                 
+                 box(h2("SDGs Global Index Scores",align = "center"),
+                     h2( textOutput('title2'),align = "center"),
+                     h3( textOutput('title2.1'),align = "center"),
+                     width = NULL,status = "primary",
+                     withSpinner(girafeOutput("countryPlot"))
+                 )
+          )
+        )
       ),
       ######################################################## 3rd tab ##########################################
       tabItem(
         tabName = "indicators",
-        
         fluidRow(
           column(width = 4,
                  box(h2("SDGs Progress",align = "center"),width = "100%",
@@ -434,74 +433,75 @@ ui = dashboardPage(
           column(width = 8,
                  box(h2("World Regions"),align = "center",
                      h4( textOutput('IndicatorTitle'),align = "center"),width = "100%",
-                     girafeOutput("regionsPlot")
+                     withSpinner(girafeOutput("regionsPlot"))
                  )
           )
         ),
         fluidPage(
           column(width = 6,
                  box(h2("Box Plot of the Regions",align = "center"),width = "100%",
-                     girafeOutput("regionBoxPlot"))
+                     withSpinner(girafeOutput("regionBoxPlot"))
+                 )
           ),
           column(width = 6,
                  box(h2("Plot of the Regions",align = "center"),width = "100%",
-                     girafeOutput("regionLinePlot"))
+                     withSpinner(girafeOutput("regionLinePlot"))
+                 )
           )
-        ),
-       
-        
+          
+        )
       ),
       ######################################################## 4th tab ##########################################
-      tabItem(tabName = "analytics",
-              fluidPage(
-                column(width = 6,
-                       box(h2("Analysis of the SDGs Indicators",align = "center"),
-                           h3("Test of Normality & Time Series"),width = "100%",
-                           selectInput(inputId = "t2goal",
-                                       label = "Please select a goal:",
-                                       choices = unique(regions$Goal)
-                           ),
-                           uiOutput("t2secondSelection")
-                       ),
-                       box(title = "Dataset Table",width = "100%",
-                           DT::dataTableOutput(outputId = "table", width = "auto")
-                           #tableOutput("tablePlot")
-                       )
-                ),
-                column(width = 6,
-                       box(h3( "Box Plot Regions of World",align = "center"),
-                           h4( textOutput('IndicatorT'),align = "center"),width = "100%",
-                           girafeOutput("bPlot"),
-                           h5("The boxplot shows the median levels across all the regions and also the potential outliers in the data."),
-                           h3( "Histogram",align = "center"),
-                           h5("The histogram shows the distribution of the data across all regions."),
-                           plotOutput("hPlot"),
-                           h3( "Shapiro Wilk Normality Tests",align = "center"),
-                           h4("Hypothesis"),
-                           h5(textOutput("h0")),
-                           h5(textOutput("h1")),
-                           h5("α = The alfa value is set to 0.05 with 95% confidence rate."),
-                           verbatimTextOutput("Result"),
-                           h5(textOutput('hypo'))
-                       ),
-                       box(h3("Time Series Analysis",align = "center"),
-                           h4("ARIMA (Auto-Regressive Integrated Moving Averages)",align = "center"),
-                           h5("This analysis is based on the ARIMA model which is a great tool for forecast using historical data"),width = "100%",
-                           verbatimTextOutput("autoarima"),
-                           h4("Model Residuals",align = "center"),
-                           plotOutput("residualsP"),
-                           h4("Hypothesis"),
-                           h5(textOutput("tsh0")),
-                           h5(textOutput("tsh1")),
-                           h5("α = The alfa value is set to 0.05 with 95% confidence rate."),
-                           verbatimTextOutput("residuals"),
-                           h5(textOutput('tshypo')),
-                           h3("Indicator Prediction for 2030",align = "center"),
-                           plotOutput("prediction")
-                       )
-                )
-              ),
-              
+      tabItem(
+        tabName = "analytics",
+        fluidPage(
+          column(width = 6,
+                 box(h2("Analysis of the SDGs Indicators",align = "center"),
+                     h3("Test of Normality & Time Series"),width = "100%",
+                     selectInput(inputId = "t2goal",
+                                 label = "Please select a goal:",
+                                 choices = unique(regions$Goal)
+                     ),
+                     uiOutput("t2secondSelection")
+                 ),
+                 box(title = "Dataset Table",width = "100%",
+                     DT::dataTableOutput(outputId = "table", width = "auto")
+                     #tableOutput("tablePlot")
+                 )
+          ),
+          column(width = 6,
+                 box(h3( "Box Plot Regions of World",align = "center"),
+                     h4( textOutput('IndicatorT'),align = "center"),width = "100%",
+                     withSpinner(girafeOutput("bPlot")),
+                     h5("The boxplot shows the median levels across all the regions and also the potential outliers in the data."),
+                     h3( "Histogram",align = "center"),
+                     h5("The histogram shows the distribution of the data across all regions."),
+                     withSpinner(plotOutput("hPlot")),
+                     h3( "Shapiro Wilk Normality Tests",align = "center"),
+                     h4("Hypothesis"),
+                     h5(textOutput("h0")),
+                     h5(textOutput("h1")),
+                     h5("α = The alfa value is set to 0.05 with 95% confidence rate."),
+                     verbatimTextOutput("Result"),
+                     h5(textOutput('hypo'))
+                 ),
+                 box(h3("Time Series Analysis",align = "center"),
+                     h4("ARIMA (Auto-Regressive Integrated Moving Averages)",align = "center"),
+                     h5("This analysis is based on the ARIMA model which is a great tool for forecast using historical data"),width = "100%",
+                     verbatimTextOutput("autoarima"),
+                     h4("Model Residuals",align = "center"),
+                     withSpinner(plotOutput("residualsP")),
+                     h4("Hypothesis"),
+                     h5(textOutput("tsh0")),
+                     h5(textOutput("tsh1")),
+                     h5("α = The alfa value is set to 0.05 with 95% confidence rate."),
+                     verbatimTextOutput("residuals"),
+                     h5(textOutput('tshypo')),
+                     h3("Indicator Prediction for 2030",align = "center"),
+                     withSpinner(plotOutput("prediction"))
+                 )
+          )
+        )
       )
     )
   )
