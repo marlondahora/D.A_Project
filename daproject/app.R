@@ -420,14 +420,15 @@ ui = dashboardPage(
         tabName = "indicators",
         fluidRow(
           column(width = 4,
-                 box(h2("SDG Indicator Progress",align = "center"),width = "100%",
+                 box(h2("SDG Indicators Progress",align = "center"),width = "100%",
                      selectInput(inputId = "goal",
                                  label = "Please select a goal:",
                                  choices = unique(sdgsMap$Goal)
                                  
                      ),
                      uiOutput("secondSelection"),
-                     uiOutput("thirdSelection")
+                     uiOutput("thirdSelection"),
+                     h5("To reveal the numerical values on the plots, please hover the mouse over them.")
                  )),
           column(width = 8,
                  box(h3("World Regions"),align = "center",
@@ -446,7 +447,7 @@ ui = dashboardPage(
           column(width = 6,
                  box(h3("Indicator Progress",align = "center"),
                      h5("Yearly time line of the SDG indicator:",align = "center"),
-                     h6( textOutput('IndicatorTitle2'),align = "center"),width = "100%",
+                     h5( textOutput('IndicatorTitle2'),align = "center"),width = "100%",
                      withSpinner(girafeOutput("regionLinePlot"))
                  )
           ),
@@ -1092,7 +1093,7 @@ server = function(input, output) {
   observeEvent(input$goal_8,{
     output$countryPlot <- renderGirafe({
       output$title2 <- renderText({"Goal:8 Decent Work and Economic Growth"})
-      output$title2.1 <- renderText({input$country})
+      #output$title2.1 <- renderText({input$country})
       countryMap <- subset(worldMap, region == input$country)     
       countryMapInd <- subset(sdgsIndexMap, region == input$country)
       countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
