@@ -1,5 +1,3 @@
-# Libraries used
-
 library(readr)
 library(magrittr)
 library(rvest)
@@ -37,7 +35,7 @@ head(iso_codes)
 sdg1_10 <- read.csv(file = "sdg1_10.csv", stringsAsFactors = FALSE, na = '0', sep = ',' )
 sdg11_17 <- read.csv(file = "sdg11_17.csv",stringsAsFactors = FALSE, na = '0', sep = ',' )
 sdgs <- rbind(sdg1_10, sdg11_17)
-names(sdgs)[4] <- "GeoArea"
+names(sdgs)[9] <- "GeoArea"
 
 ### load the World Map from the ggplot library
 worldMap <- ggplot2::map_data('world')
@@ -125,8 +123,6 @@ sdgs <- read_csv("sdgs.csv",col_names = TRUE, col_types =
 str(sdgs)
 summary(sdgs)
 round(sdgs$Value, digits=3)
-save(sdgs, file="sdgs.RData")
-#load("sdgs.RData")
 
 ##
 ###Creating R objects ####
@@ -136,8 +132,8 @@ round(sdgsMap$Value, digits=3)
 sdgsMap<- filter(sdgsMap, Units %in% "PERCENT") 
 
 sdgsMap <-  sdgsMap %>%
-  select(Goal, Target, Indicator, GeoArea, Period, Value, Units)%>%
-  group_by(Goal, Target, Indicator, GeoArea, Period, Units) %>%
+  select(Goal,Target, Indicator, GeoArea, Period, Value, Units)%>%
+  group_by(Goal,Target, Indicator, GeoArea, Period, Units) %>%
   summarise(Value = mean(Value))
 summary(sdgsMap$Value)
 
@@ -154,15 +150,8 @@ sdgsMap <- as.data.frame(sdgsMap)
 sdgsMap[] <- lapply(sdgsMap, as.character)
 sdgsMap$Value <- as.numeric(sdgsMap$Value)
 
-
-#sdgsIndexMap<- sdgsIndex
-#names(sdgsIndexMap)[1] <- "region"
-#sdgsIndexMap <- as.data.frame(sdgsIndexMap [, c(1:4,6,9:25)])
-# Index map
-
+#creating climate change object
 cli <- subset(sdgs, Indicator == "Number of deaths due to disaster (number)" & Period == "2018")
-save(cli, file = "cli.RData")
-
 
 ############# adding a region column in the worldMap dataset based on the SDGS regions ######
 # regions names if is needed 
@@ -352,107 +341,11 @@ rm(Central_Asia,Eastern_Asia,Western_Asia,Southern_Asia,South_Eastern_Asia,Sub_S
    Northern_Africa,Southern_Europe,Eastern_Europe,Western_Europe,Northern_Europe,Northern_America,
    Latin_America_and_the_Caribbean,Micronesia,Melanesia,Polynesia,Australia_and_New_Zealand,i,ix)
 
-#tap1
+#saving the R files in the daproject folder
 save(sdgs, file="daproject/sdgs.RData")
 save(cli, file = "daproject/cli.RData")
+save(sdgsIndex, file = "daproject/sdgsIndex.RData")
+save(sdgsMap, file = "daproject/sdgsMap.RData")
+save(worldMap, file = "daproject/worldMap.RData")
 
-### Creating index polar chart ####
-polarIndex <- as.data.frame(sdgsIndex[,c(9:25)])
-polarIndex<- melt(data = polarIndex, measure.vars = c("Goal_1", "Goal_2","Goal_3", "Goal_4","Goal_5", "Goal_6","Goal_7", "Goal_8",
-                                                      "Goal_9", "Goal_10","Goal_11", "Goal_12","Goal_13", "Goal_14","Goal_15",
-                                                      "Goal_16","Goal_17"))
-
-polarIndex$value<-replace_na(polarIndex$value, 0)
-polarIndex <- polarIndex%>%
-  select(variable,value)%>%
-  group_by(variable) %>%
-  summarise(value = mean(value))
-
-polarIndex$value <- round(polarIndex$value, digits=2)
-polarIndex <- as.data.frame(polarIndex)
-polarIndex$variable <- factor(polarIndex$variable, labels = c( "Goal 1", "Goal 2","Goal 3", "Goal 4","Goal 5", "Goal 6","Goal 7", "Goal 8",
-                                                               "Goal 9", "Goal 10","Goal 11", "Goal 12","Goal 13", "Goal 14","Goal 15",
-                                                               "Goal 16","Goal 17" ))
-
-cores <- c("#FF3300","#FF9900","#00CC66","red3","red2","steelblue2",
-           "gold2","red4","#FF9933","deeppink3","orange3","orange4",
-           "green4","dodgerblue1","green2","dodgerblue4","midnightblue")
-
-sdgsLabels <- c( "Goal 1", "Goal 2","Goal 3", "Goal 4","Goal 5", "Goal 6","Goal 7", "Goal 8",
-                          "Goal 9", "Goal 10","Goal 11", "Goal 12","Goal 13", "Goal 14","Goal 15",
-                          "Goal 16","Goal 17" )
-
-### position chart index
-#top 10
-top10 <- tbl_df(sdgsIndex[order(sdgsIndex$Global_Rank),]) %>%
-  group_by(Global_Rank) %>%
-  top_n(10)
-top10 <- top10[c(1:10),]
-#bottom 10
-bottom10 <- tbl_df(sdgsIndex[order(-sdgsIndex$Global_Rank),]) %>%
-  group_by(Global_Rank) %>%
-  top_n(10)
-bottom10 <- bottom10[c(1:10),]
-bottom10 <- bottom10[order(bottom10$Global_Rank),]
-rankCores <- c(rep("blue",10), rep("red",10))
-topBottom <- rbind(top10,bottom10)
-topBottom <- topBottom[order(topBottom$Global_Rank),]
-
-topBottom$Country <- factor(topBottom$Country, levels = c("Denmark","Sweden","Finland","France","Austria","Germany" ,"Czech Republic","Norway","Netherlands","Estonia","Afghanistan","Niger","Sierra Leone","Haiti","Liberia","Madagascar","Nigeria","Congo, (Kinshasa)" ,"Chad","Central African Republic"),
-                            labels = c("Denmark","Sweden","Finland","France","Austria","Germany" ,"Czech Republic","Norway","Netherlands","Estonia","Afghanistan","Niger","Sierra Leone","Haiti","Liberia","Madagascar","Nigeria","Congo, (Kin.)" ,"Chad","C.African Rep."))
-
-### countries polar chart
-countriesPolar <- melt(sdgsIndexMap, id.vars = "region", measure.vars = c("Goal_1", "Goal_2","Goal_3", "Goal_4","Goal_5", "Goal_6","Goal_7", "Goal_8",
-                                                                          "Goal_9", "Goal_10","Goal_11", "Goal_12","Goal_13", "Goal_14","Goal_15",
-                                                                          "Goal_16","Goal_17"))                                                                         
-
-#### Building the maps ####
-
-###Regions maps
-regions <- subset(sdgsMap, sdgsMap$GeoArea=="Central Asia"|sdgsMap$GeoArea=="Western Asia"|sdgsMap$GeoArea=="Northern Africa"|sdgsMap$GeoArea=="Sub-Saharan Africa"|sdgsMap$GeoArea=="South-Eastern Asia"
-                  |sdgsMap$GeoArea=="Southern Asia"|sdgsMap$GeoArea=="Eastern Europe"|sdgsMap$GeoArea=="Western Europe"|sdgsMap$GeoArea=="Southern Europe"|sdgsMap$GeoArea=="Northern Europe"
-                  |sdgsMap$GeoArea=="Northern Europe"|sdgsMap$GeoArea=="Polynesia"|sdgsMap$GeoArea=="Eastern Asia"|sdgsMap$GeoArea=="Northern America"|sdgsMap$GeoArea=="Micronesia"
-                  |sdgsMap$GeoArea=="Latin America and the Caribbean"|sdgsMap$GeoArea=="Melanesia"|sdgsMap$GeoArea=="Australia and New Zealand")
-names(regions)[3] <- "SDGsRegions"
-regions$Indicator <- str_replace_all(regions$Indicator, c(", by sex and age"=" in"))
-regions$Indicator <- str_replace_all(regions$Indicator, c(", by sex"=" in"))
-regions$Value <- round(regions$Value, digits=2)
-regions <- as.data.frame(regions [, -c(5,7)])
-
-
-#ggplot them functions
-
-my_theme <- function () { 
-  theme_bw() + theme(axis.title = element_blank(),
-                     axis.text = element_blank(),
-                     axis.ticks = element_blank(),
-                     panel.grid.major = element_blank(), 
-                     panel.grid.minor = element_blank(),
-                     panel.background = element_blank(),
-                     legend.title = element_blank(),
-                     legend.position = "bottom",
-                     legend.text = element_text(size =15 ),
-                     legend.key.size = unit(1.0, "cm"),
-                     legend.key.width = unit(2.5,"cm"),
-                     panel.border = element_blank(), 
-                     strip.background = element_rect(fill = 'white', colour = 'white'))
-  
-  
-}
-
-my_polar_theme <- function(){
-  theme(
-    text = element_text(size=15),
-    legend.position = "none",
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_text(),
-    panel.grid.major = element_line_interactive(size = 0.1, linetype = 'solid',
-                                                colour = "grey"), 
-    panel.background = element_rect(fill = 'transparent', colour = 'transparent'),
-    strip.background = element_rect(fill = 'transparent', colour = 'transparent'))
-  
-}
 

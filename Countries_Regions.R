@@ -4,9 +4,6 @@ t2<- tibble(Country = character(),
 
 t <- subset(sdgsMap, sdgsMap$Indicator =="Employed population below international poverty line, by sex and age (%)")
 
-"Central Asia","Western Asia","Northern Africa","Sub-Saharan Africa","South-Eastern Asia",
-"Southern Asia","Eastern Europe","Western Europe","Southern Europe","Northern Europe","Northern Europe",
-"Polynesia","Eastern Asia"
 
 for (i in 1:nrow(t)) {
   if (t[i,3]=="Northern Africa"){
