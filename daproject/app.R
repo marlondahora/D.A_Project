@@ -154,7 +154,7 @@ ui = dashboardPage(
                 valueBoxOutput("climateBox")
               ),
               fluidRow(
-                #################### buttons##############
+              #################### buttons##############
                 tags$button(
                   id = "wgoal_1",
                   class = "btn action-button",
@@ -267,7 +267,7 @@ ui = dashboardPage(
                        )
                 ),
                 column(width = 6,
-                       box(h2("Countries Position",align = "center"),width = "100%",
+                       box(h2("Position of Countries ",align = "center"),width = "100%",
                            withSpinner(girafeOutput("indextPosition"))
                        )
                 )
@@ -283,7 +283,9 @@ ui = dashboardPage(
                      selectInput(inputId = "country",
                                  label = "Please select a country:",
                                  choices = unique(sdgsIndex$Country)
-                     )
+                     ),
+                     h5("To reveal the numerical values on the plots, please hover the mouse over them."),
+                     h5("Please note that some countries have missing values. This will show as NA on the plot.")
                  )
           ),
           column(width = 6,
@@ -406,8 +408,7 @@ ui = dashboardPage(
           ),
           column(width = 6,
                  
-                 box(h2("SDGs Global Index Scores",align = "center"),
-                     h2( textOutput('title2'),align = "center"),
+                 box(h2( textOutput('title2'),align = "center"),
                      h3( textOutput('title2.1'),align = "center"),
                      width = NULL,status = "primary",
                      withSpinner(girafeOutput("countryPlot"))
@@ -493,7 +494,7 @@ ui = dashboardPage(
                  ),
                  box(h3("Time Series Analysis",align = "center"),
                      h4("ARIMA (Auto-Regressive Integrated Moving Averages)",align = "center"),
-                     h5("This analysis is based on the ARIMA model which is a great tool for forecast using historical data"),width = "100%",
+                     h5("This analysis is based on the ARIMA model which is a very accurate tool for forecast using historical data"),width = "100%",
                      verbatimTextOutput("autoarima"),
                      h4("Model Residuals",align = "center"),
                      withSpinner(plotOutput("residualsP")),
@@ -966,15 +967,13 @@ server = function(input, output) {
   observeEvent(input$goal_1,{
     output$title2 <- renderText({"Goal:1 No Poverty"})
     output$linePlot <- renderGirafe({
-      #tmp<- sdgsMap$GeoArea == input$country
       tmp <- subset(g1EmpPovert, Country == input$country)
       wp<-ggplot(tmp) +
         aes(x = Period, y = Value, group=1,
             tooltip = sprintf("%s<br/>%s", tmp$Country, tmp$Value)) +
         geom_point_interactive(size = 2L, colour = "#ef562d") +
         geom_line_interactive(color="blue", size=1)+
-        #geom_smooth_interactive(stat = "smooth", method = "loess") +
-        #geom_text(aes(label = Value, y = Value +0.5), size = 2)+
+
         theme_minimal()
       
       girafe(ggobj = wp)
@@ -1093,7 +1092,6 @@ server = function(input, output) {
   observeEvent(input$goal_8,{
     output$countryPlot <- renderGirafe({
       output$title2 <- renderText({"Goal:8 Decent Work and Economic Growth"})
-      #output$title2.1 <- renderText({input$country})
       countryMap <- subset(worldMap, region == input$country)     
       countryMapInd <- subset(sdgsIndexMap, region == input$country)
       countryMapIndex<- merge(countryMap,countryMapInd, sort = FALSE, by = "region")
@@ -1375,9 +1373,9 @@ server = function(input, output) {
   output$hypo <- renderText({
     
     if (shp()$p.value <0.05) {
-      "In this case the P-value < 0.05 reject H₀. Therefore, the data IS NOT normally distributed across the regions."
+      "In this case the P-value < 0.05 rejects H₀. Therefore, the data is not normally distributed across the regions."
     } else {
-      "In this case the P-value > 0.05 fail to reject H₀. Therefore, the data IS normally distributed across the regions."
+      "In this case the P-value > 0.05 failed to reject H₀. Therefore, the data is normally distributed across the regions."
     }
   })
   # time series
@@ -1418,9 +1416,9 @@ server = function(input, output) {
     output$tshypo <- renderText({
       res<-checkresiduals(indicator.forcast)
       if (res$p.value <0.05) {
-        "In this case the P-value < 0.05 reject H₀. Therefore, the data IS NOT stationay."
+        "In this case the P-value < 0.05 rejects H₀. Therefore, the data is not stationary."
       } else {
-        "In this case the P-value > 0.05 fail to reject H₀. Therefore, the data IS stationay.."
+        "In this case the P-value > 0.05 failed to reject H₀. Therefore, the data is stationary."
       }
     })
     
